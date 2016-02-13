@@ -1,0 +1,23 @@
+{
+  "name": "beeyard",
+  "version": "0.1.0",
+  "description": "beeyard",
+  "main": "pluviam.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified! Configure in package.json\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "node.js"
+  ],
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "config": "*",
+    "errorhandler": "^1.4.2",
+    "express": "*",
+    "mongodb": "*"
+  },
+  "author": "Saulo Matte Madalozzo",
+  "license": "MIT",
+  "readmeFilename": "README.md"
+}

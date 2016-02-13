@@ -1,0 +1,219 @@
+<head>
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css">
+</head>
+<body  ng-app="PluviamApp"  ng-cloak>
+	<!-- Angular Material Dependencies -->
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular.min.js"></script> 
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-animate.min.js"></script> 
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-aria.min.js"></script> 
+	<script src="//ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script> 
+
+	<!-- External libs -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://www.google.com/jsapi"></script>
+<div ng-controller="PluviamContr">
+	<div layout="column" layout-fill>
+		<md-toolbar>
+		    <div class="md-toolbar-tools">
+				<img src="/images/pluviam_menu_logo.png"/> <h1 class="md-title">pluviam</h1>
+				<!-- fill up the space between left and right area -->
+				<span flex>    <p>    <a href="http://goo.gl/forms/y4KIgseSPn" >Contato</a>  Sobre</p></span>
+				
+				<md-select ng-model="topping">
+					<md-optgroup label="Meats">
+						<md-option ng-value="topping.name" ng-repeat="topping in toppings | filter: {category: 'meat' }">{{topping.name}}</md-option>
+					</md-optgroup>
+					<md-optgroup label="Veggies">
+						<md-option ng-value="topping.name" ng-repeat="topping in toppings | filter: {category: 'veg' }">{{topping.name}}</md-option>
+					</md-optgroup>
+				</md-select>
+				
+				<md-button class="md-raised">Button</md-button>
+		   </div>
+		</md-toolbar>
+		<md-content layout-padding>
+
+
+				<div layout="row" layout-align="space-around center">
+					<div class="align-center">
+						<p class="md-caption">Estação Meteorológica Automática</p>
+						<p class="md-body-2">{{station.fullName}}</p>
+						<p class="md-caption">Lat, Long, Altitude {{weather}}</p>
+					</div>
+				</div>
+
+
+				<div layout="row" layout-align="space-around center">
+					<div class="align-center">
+						<img src="/images/thermometer.png"/>
+						<p class="md-caption">Temperatura</p>
+						
+					</div>
+					<div class="align-center">
+						<img src="/images/raindrop.png"/>
+						<p class="md-caption">Umidade</p>
+					</div>
+					<div class="align-center">
+						<img src="/images/umbrella.png"/>
+						<p class="md-caption">Chuva</p>
+					</div>
+					<div class="align-center">
+						<img src="/images/wind.png"/>
+						<p class="md-caption">Vento</p>
+					</div>
+					<div class="align-center">
+						<img src="/images/sunny.png"/>
+						<p class="md-caption">Luminosidade</p>
+					</div>
+					<div class="align-center">
+						<img src="/images/barometer.png"/>
+						<p class="md-caption">Pressão</p>
+					</div>
+				</div>
+
+
+
+				<div flex id="temperature" style="width: 100%;">  <div layout="row" layout-sm="column" layout-align="space-around">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </div></div>
+				<div flex id="humidity" style="width: 100%;"></div>
+				<div flex id="precipitation" style="width: 100%;"></div>
+				<div flex id="wind" style="width: 100%;"></div>
+				<div flex id="pressure" style="width: 100%;"></div>
+		</md-content>
+		<md-toolbar>
+			<div layout="row">
+				<div flex layout-margin></div>
+				<div flex layout-margin><p class="md-caption">Pluviam | Saulo Matte Madalozzo ME | hello@pluvi.am</p></div>
+			</div>
+      	</md-toolbar>
+	</div>
+</div>
+	<script>
+	//angular
+	
+	
+	'use strict';
+var isGoogleChartReady = false;
+/* Controllers */
+google.load('visualization', '1', {
+  packages: ['corechart']
+});
+
+google.setOnLoadCallback(function() {
+	isGoogleChartReady =  true;
+});
+	
+	
+angular.module('PluviamApp', ['ngMaterial'])
+.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .primaryPalette('blue')
+    .accentPalette('indigo');
+}).
+controller('PluviamContr', ['$scope','$http',
+                       function($scope, $http) {
+
+                    		  $http.get('http://localhost:1337/r/stations/5667b000ce453b44727e0174').
+                    		    success(function(results, status, headers, config) {
+                    		    	//console.log("its ready?");
+                    		    	/*while (!isGoogleChartReady){
+                    		    		console.log("notready");
+                    		    	}*/
+                    		    	if (isGoogleChartReady){
+                    		    	console.log("ready");
+                    		        var temperatureData = new google.visualization.DataTable();
+                    		        temperatureData.addColumn('datetime', 'Data/Hora');
+                    		        temperatureData.addColumn('number', 'Temperatura');
+                    		        
+                    		        var humidityData = new google.visualization.DataTable();
+                    		        humidityData.addColumn('datetime', 'Data/Hora');
+                    		        humidityData.addColumn('number', 'Umidade');
+
+                    		        var pressureData = new google.visualization.DataTable();
+                    		        pressureData.addColumn('datetime', 'Data/Hora');
+                    		        pressureData.addColumn('number', 'Pressão');
+
+                    		        var windData = new google.visualization.DataTable();
+                    		        windData.addColumn('datetime', 'Data/Hora');
+                    		        windData.addColumn('number', 'Vento');
+                    		        windData.addColumn('number', 'Rajada');
+                    		        
+                    		        var precipitationData = new google.visualization.DataTable();
+                    		        precipitationData.addColumn('datetime', 'Data/Hora');
+                    		        precipitationData.addColumn('number', 'Chuva');
+$scope.weather = results.weather[0];
+$scope.station = results.station;
+                    		        $.each(results.weather, function (i, row) {
+                    		      	  temperatureData.addRow([(new Date(row.date)),parseFloat(row.temperature)]);
+                    		      	  humidityData.addRow([(new Date(row.date)),parseFloat(row.humidity)]);
+                    		      	  pressureData.addRow([(new Date(row.date)),parseFloat(row.pressure)]);
+                    		      	  precipitationData.addRow([(new Date(row.date)),parseFloat(row.precipitation)]);
+                    		      	  windData.addRow([(new Date(row.date)),parseFloat(row.wind.speed.speed),parseFloat(row.wind.speed.gust)]);
+                    		        });
+                    		        
+                    		        drawChart(new google.visualization.LineChart(document.getElementById("temperature")), ['red'], 'Temperatura - °C', temperatureData);
+                    		        drawChart(new google.visualization.LineChart(document.getElementById("humidity")), ['blue'], 'Umidade Relativa - %', humidityData);
+                    		        drawChart(new google.visualization.ColumnChart(document.getElementById("precipitation")), ['blue'], 'Chuva - mm', precipitationData);
+                    		        drawChart(new google.visualization.AreaChart(document.getElementById("wind")), ['blue', 'red'], 'Vento - Km/h', windData);
+                    		        drawChart(new google.visualization.LineChart(document.getElementById("pressure")), ['green'], 'Pressão Atmosférica - Pa', pressureData);
+                    		    	}
+                    		    }).
+                    		    error(function(data, status, headers, config) {
+                    		      // log error
+                    		      console.log("fail");
+                    		    });
+                    		  
+                     }
+
+]);
+
+	
+// app.controller("PostsCtrl", function($scope, $http) 
+// 	});	
+	
+	
+	
+    // onload callback
+    //function drawCharts() {
+
+//       // JSON request
+//       var jsonData = $.ajax({
+//         url: 'http://localhost:1337/r/weather/5667b000ce453b44727e0174',
+//         dataType: 'json',
+//       }).done(function (results) {
+
+
+
+//       });
+
+//     }
+    
+    function drawChart(chart, color, title, data){
+        var options = {
+    		    hAxis: {
+    		        format: 'HH:mm'
+    		    },
+			colors:color,
+			legend: {position: 'none'},
+			height: 300,  
+			title: title,
+			vAxis: {minValue: 0},
+			isStacked: false
+    		};
+        chart.draw(data, options); 
+    }
+
+    // load chart lib
+//     google.load('visualization', '1', {
+//       packages: ['corechart']
+//     });
+
+//     // call drawChart once google charts is loaded
+//     google.setOnLoadCallback(drawCharts);
+
+  </script>
+	<style>
+		.align-center{text-align:center}
+	</style>
+</body>

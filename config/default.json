@@ -1,0 +1,20 @@
+{
+  "server": {
+    "frontend": {
+      "port": 80
+    },
+    "api": {
+      "port": 1337,
+      "loggingDebug": true
+    },
+    "database": {
+    	"name": "beekeeper",
+    	"username": "username",
+    	"password": "password",
+    	"collectionStations": "stations",
+    	"collectionWeather": "weather",
+    	"server": "localhost",
+    	"port": 27017
+    }
+  }
+}
