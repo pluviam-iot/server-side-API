@@ -2,11 +2,25 @@
   <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css">
 </head>
 <body  ng-app="PluviamApp"  ng-cloak>
+	<style>
+		.align-center{text-align:center}
+		.header-now-value{
+			font-family: Arial,Helvetica,sans-serif;
+		    color: #333333;
+		    font-weight: bold;
+		    font-size: 36px;
+		}
+		.header-now-unit{
+			font-family: Arial,Helvetica,sans-serif;
+		    font-size: 14px;
+		    color: #333333;
+		}
+	</style>
 	<!-- Angular Material Dependencies -->
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular.min.js"></script> 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-animate.min.js"></script> 
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-aria.min.js"></script> 
-	<script src="//ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script> 
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-animate.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-aria.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script>
 
 	<!-- External libs -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -14,22 +28,30 @@
 <div ng-controller="PluviamContr">
 	<div layout="column" layout-fill>
 		<md-toolbar>
-		    <div class="md-toolbar-tools">
-				<img src="/images/pluviam_menu_logo.png"/> <h1 class="md-title">pluviam</h1>
+			<div class="md-toolbar-tools">
+				<a href="http://pluvi.am" >
+					<img src="/images/pluviam_menu_logo.png"/>
+				</a>
+
+				<h1 class="md-title">
+					pluviam
+				</h1>
+
 				<!-- fill up the space between left and right area -->
-				<span flex>    <p>    <a href="http://goo.gl/forms/y4KIgseSPn" >Contato</a>  Sobre</p></span>
-				
-				<md-select ng-model="topping">
-					<md-optgroup label="Meats">
-						<md-option ng-value="topping.name" ng-repeat="topping in toppings | filter: {category: 'meat' }">{{topping.name}}</md-option>
-					</md-optgroup>
-					<md-optgroup label="Veggies">
-						<md-option ng-value="topping.name" ng-repeat="topping in toppings | filter: {category: 'veg' }">{{topping.name}}</md-option>
-					</md-optgroup>
-				</md-select>
-				
-				<md-button class="md-raised">Button</md-button>
-		   </div>
+				<span flex></span>
+
+				<div class="md-subhead">
+					<p>
+						<a href="http://goo.gl/forms/y4KIgseSPn">
+							Contato
+						</a>
+						<a href="http://pluvi.am/about">
+							Sobre
+						</a>
+					</p>
+				</div>
+
+			</div>
 		</md-toolbar>
 		<md-content layout-padding>
 
@@ -37,7 +59,7 @@
 				<div layout="row" layout-align="space-around center">
 					<div class="align-center">
 						<p class="md-caption">Estação Meteorológica Automática</p>
-						<p class="md-body-2">{{station.fullName}}</p>
+						<p class="md-body-2">{{station}}</p>
 						<p class="md-caption">Lat, Long, Altitude {{weather}}</p>
 					</div>
 				</div>
@@ -47,28 +69,41 @@
 					<div class="align-center">
 						<img src="/images/thermometer.png"/>
 						<p class="md-caption">Temperatura</p>
-						
+						<span class="header-now-value">{{weather.temperature}}</span>
+						<span class="header-now-unit">°C</span>
 					</div>
 					<div class="align-center">
 						<img src="/images/raindrop.png"/>
 						<p class="md-caption">Umidade</p>
+						<span class="header-now-value">{{weather.humidity}}</span>
+						<span class="header-now-unit">%</span>
 					</div>
 					<div class="align-center">
 						<img src="/images/umbrella.png"/>
 						<p class="md-caption">Chuva</p>
+						<span class="header-now-value">{{weather.precipitation}}</span>
+						<span class="header-now-unit">mm</span>
 					</div>
 					<div class="align-center">
 						<img src="/images/wind.png"/>
 						<p class="md-caption">Vento</p>
+						<span class="header-now-value">{{weather.wind.speed.speed}}</span>
+						<span class="header-now-unit">km/h</span>
+						<span class="header-now-value">{{weather.wind.direction}}</span>
 					</div>
 					<div class="align-center">
 						<img src="/images/sunny.png"/>
 						<p class="md-caption">Luminosidade</p>
+						<span class="header-now-value">{{weather.brightness}}</span>
+						<span class="header-now-unit">W</span>
 					</div>
 					<div class="align-center">
 						<img src="/images/barometer.png"/>
 						<p class="md-caption">Pressão</p>
+						<span class="header-now-value">{{weather.pressure*10}}</span>
+						<span class="header-now-unit">hPa</span>
 					</div>
+
 				</div>
 
 
@@ -91,8 +126,8 @@
 </div>
 	<script>
 	//angular
-	
-	
+
+
 	'use strict';
 var isGoogleChartReady = false;
 /* Controllers */
@@ -103,8 +138,8 @@ google.load('visualization', '1', {
 google.setOnLoadCallback(function() {
 	isGoogleChartReady =  true;
 });
-	
-	
+
+
 angular.module('PluviamApp', ['ngMaterial'])
 .config(function($mdThemingProvider) {
   $mdThemingProvider.theme('default')
@@ -125,7 +160,7 @@ controller('PluviamContr', ['$scope','$http',
                     		        var temperatureData = new google.visualization.DataTable();
                     		        temperatureData.addColumn('datetime', 'Data/Hora');
                     		        temperatureData.addColumn('number', 'Temperatura');
-                    		        
+
                     		        var humidityData = new google.visualization.DataTable();
                     		        humidityData.addColumn('datetime', 'Data/Hora');
                     		        humidityData.addColumn('number', 'Umidade');
@@ -138,7 +173,7 @@ controller('PluviamContr', ['$scope','$http',
                     		        windData.addColumn('datetime', 'Data/Hora');
                     		        windData.addColumn('number', 'Vento');
                     		        windData.addColumn('number', 'Rajada');
-                    		        
+
                     		        var precipitationData = new google.visualization.DataTable();
                     		        precipitationData.addColumn('datetime', 'Data/Hora');
                     		        precipitationData.addColumn('number', 'Chuva');
@@ -151,7 +186,7 @@ $scope.station = results.station;
                     		      	  precipitationData.addRow([(new Date(row.date)),parseFloat(row.precipitation)]);
                     		      	  windData.addRow([(new Date(row.date)),parseFloat(row.wind.speed.speed),parseFloat(row.wind.speed.gust)]);
                     		        });
-                    		        
+
                     		        drawChart(new google.visualization.LineChart(document.getElementById("temperature")), ['red'], 'Temperatura - °C', temperatureData);
                     		        drawChart(new google.visualization.LineChart(document.getElementById("humidity")), ['blue'], 'Umidade Relativa - %', humidityData);
                     		        drawChart(new google.visualization.ColumnChart(document.getElementById("precipitation")), ['blue'], 'Chuva - mm', precipitationData);
@@ -163,17 +198,17 @@ $scope.station = results.station;
                     		      // log error
                     		      console.log("fail");
                     		    });
-                    		  
+
                      }
 
 ]);
 
-	
-// app.controller("PostsCtrl", function($scope, $http) 
-// 	});	
-	
-	
-	
+
+// app.controller("PostsCtrl", function($scope, $http)
+// 	});
+
+
+
     // onload callback
     //function drawCharts() {
 
@@ -188,7 +223,7 @@ $scope.station = results.station;
 //       });
 
 //     }
-    
+
     function drawChart(chart, color, title, data){
         var options = {
     		    hAxis: {
@@ -196,12 +231,12 @@ $scope.station = results.station;
     		    },
 			colors:color,
 			legend: {position: 'none'},
-			height: 300,  
+			height: 300,
 			title: title,
 			vAxis: {minValue: 0},
 			isStacked: false
     		};
-        chart.draw(data, options); 
+        chart.draw(data, options);
     }
 
     // load chart lib
@@ -213,7 +248,5 @@ $scope.station = results.station;
 //     google.setOnLoadCallback(drawCharts);
 
   </script>
-	<style>
-		.align-center{text-align:center}
-	</style>
+
 </body>
