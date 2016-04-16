@@ -34,7 +34,7 @@ exports.getWeather = function (req, res) {
 	var returnWeather = false;
 	var returnStation = false;
 
-	database.getStationFull(id, function (err, station) {
+	database.getStation(id, function (err, station) {
 		if (err) {
 			res.send(result);
 			console.log(err.stack || err);

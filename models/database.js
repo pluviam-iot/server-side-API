@@ -174,3 +174,17 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 		});
 	});
 };
+
+exports.getStation = function (stationId, callback) {
+	console.log('getStation - id: ' + stationId);
+	this.getStationFull(stationId, function (err, station) {
+		if (err) {
+			callback('error getting station');
+			return;
+		} else {
+			station.internal = undefined;
+			callback(null, station);
+			return;
+		}
+	});
+};
