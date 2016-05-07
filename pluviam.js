@@ -1,9 +1,25 @@
+'use strict';
+
+var logger = require('./utils/logger.js');
+logger.info('Starting pluviam app');
 var express = require('express');
+var morgan = require('morgan');
 
 var pluviam = require('./routes/api.js');
 var config = require('config');
 
 var app = express();
+// app.use(morgan('combined', { 'stream': logger.stream }));
+logger.debug("Overriding 'Express' logger");
+// TODO logger
+app.use(morgan('combined', { 'stream':
+
+{
+    write: function (str) { logger.info(str); }
+  }
+
+}));
+
 var bodyParser = require('body-parser');
 
 // configure app to use bodyParser()
@@ -19,7 +35,7 @@ var router = express.Router();              // get an instance of the express Ro
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function (req, res) {
-	res.json({ message: 'Welcome to pluvi.am api!' });
+	res.json({ message: 'coded while the baby sleeps' });
 });
 // more routes for our API will happen here
 
@@ -43,14 +59,28 @@ app.use('/r', router);
 app.use(express.static('public'));
 
 // START THE SERVER
-// =============================================================================
+// ===========================================================================
 app.listen(port);
-console.log('Magic happens on port ' + port);
+logger.info('Magic happens on port ' + port);
 
 if (app.get('env') === 'development') {
 	var errorHandler = require('errorhandler');
 	app.use(errorHandler());
 }
+
+process.on('SIGTERM', function () {
+	console.log('Shutdown process - Sigterm signal, lets shutdown.');
+	app.close(function () {
+		console.log('Shutdown process - Remaining app connections responded and closed');
+		pluviam.closeConnections(function () {
+			console.log('Shutdown process - Database connection closed');
+			console.log('Shutdown process - Success. Exiting.');
+			process.exit(0);
+		});
+	});
+});
+
+logger.info('Pluviam app started');
 
 /* get api.pluvi.am/r/stations/
 post api.pluvi.am/r/weather/

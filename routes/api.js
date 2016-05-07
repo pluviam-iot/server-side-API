@@ -1,3 +1,6 @@
+'use strict';
+
+var logger = require('../utils/logger.js');
 var database = require('../models/database.js');
 
 exports.addWeather = function (req, res) {

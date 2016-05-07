@@ -1,41 +1,48 @@
+'use strict';
+var logger = require('../utils/logger.js');
 var mongo = require('mongodb');
 var config = require('config');
-var util = require('../lib/util.js');
+var util = require('../utils/util.js');
 
-var Server = mongo.Server;
-var	Db = mongo.Db;
-
-var databasePort = config.get('server.database.port');
-var databaseServer = config.get('server.database.server');
+var dbPort = config.get('server.database.port');
+var dbServer = config.get('server.database.server');
+var dbUser = 'saulo';
+var dbPassword = 'C0nnect123';
 
 var databaseName = config.get('server.database.name');
 var collectionWeather = config.get('server.database.collectionWeather');
 var collectionStations = config.get('server.database.collectionStations');
 
-var server = new Server(databaseServer, databasePort, {auto_reconnect: true});
-var db = new Db(databaseName, server);
+var assert = require('assert');
 
-db.open(function (err, db) {
-	if (err) {
-		console.log('Error connecting to database ' + databaseName);
-	}else {
-		console.log('Connected to ' + databaseName + 'database');
-		db.collection(collectionWeather, {strict: true}, function (err, collection) {
-			if (err) {
-				console.log('Collection ' + collectionWeather + ' not found!');
-			}else {
-				console.log('Successful connection to ' + collectionWeather + '!');
-			}
-		});
-		db.collection(collectionStations, {strict: true}, function (err, collection) {
-			if (err) {
-				console.log('Collection ' + collectionStations + ' not found!');
-			}else {
-				console.log('Successful connection to ' + collectionStations + '!');
-			}
-		});
-	}
+var MongoClient = require('mongodb').MongoClient;
+var db;
+var databaseURL = 'mongodb://madalozzo:C0nnect123@localhost:27017/pluviam';
+MongoClient.connect(databaseURL, function (err, connection) {
+	assert.equal(null, err);
+	console.log('Connected correctly to server.');
+	db = connection;
+	verifyCollections();
 });
+
+function verifyCollections () {
+	db.collection(collectionWeather, {strict: true}, function (err, collection) {
+		if (err) {
+			logger.error('Collection ' + collectionWeather + ' not found!');
+			process.exit(1);
+		}else {
+			logger.info('Successful connection to ' + collectionWeather + '!');
+		}
+	});
+	db.collection(collectionStations, {strict: true}, function (err, collection) {
+		if (err) {
+			logger.error('Collection ' + collectionStations + ' not found!');
+			process.exit(1);
+		}else {
+			logger.info('Successful connection to ' + collectionStations + '!');
+		}
+	});
+}
 
 exports.getStationFull = function (stationId, callback) {
 	console.log('getStationFull - id: ' + stationId);
@@ -127,22 +134,18 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 	console.log('Getting station for ' + stationId + ' ' + hashFromReq);
 	db.collection(collectionStations, function (err, collection) {
 		if (err) {
-			callback(new Error('collection get'));
-			return;
+			return callback(new Error('collection get'));
 		}
 		collection.findOne({'_id': new mongo.ObjectId(stationId)}, function (err, item) {
 			if (err) {
-				callback(new Error('collection findOne'));
-				return;
+				return callback(new Error('collection findOne'));
 			}else {
 				if (util.isNotEmpty(item)) {
 					if (util.isEmpty(item.internal.password) || util.isEmpty(item.internal.salt) || util.isEmpty(hashFromReq)) {
-						callback(new Error('empty identify string'));
-						return;
+						return callback(new Error('empty identify string'));
 					}
 					if (!util.isValidPassword(item.internal.password, item.internal.salt, hashFromReq)) {
-						callback(new Error('invalid password'));
-						return;
+						return callback(new Error('invalid password'));
 					}
 					// TODO validate object and properties and make conversions
 					weather.stationId = item._id;
@@ -150,25 +153,22 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 					if (typeof weather.date === 'undefined' || weather.date === null) {
 						weather.date = new Date().toISOString();
 					}
-					db.collection(collectionWeather, function (err, collection) {
+					MongoClient.collection(collectionWeather, function (err, collection) {
 						if (err) {
-							callback(new Error('error db.collection'));
-							return;
+							return callback(new Error('error db.collection'));
 						}
 						collection.insert(weather, {safe: true}, function (err, result) {
 							if (err) {
-								callback(new Error('error'));
-								return;
+								return callback(new Error('error'));
 							} else {
 								console.log('Adding weather: ' + JSON.stringify(weather));
 								console.log('Success collection.insert');
-								callback(null, 'success collection.insert');
+								return callback(null, 'success collection.insert');
 							}
 						});
 					});
 				}else {
-					callback(new Error('error item is empty'));
-					return;
+					return callback(new Error('error item is empty'));
 				}
 			}
 		});
@@ -187,4 +187,10 @@ exports.getStation = function (stationId, callback) {
 			return;
 		}
 	});
+};
+
+exports.closeConnections = function (callback) {
+	db.close();
+	callback(null);
+	return;
 };

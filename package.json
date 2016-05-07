@@ -15,7 +15,9 @@
     "config": "*",
     "errorhandler": "^1.4.2",
     "express": "*",
-    "mongodb": "*"
+    "mongodb": "*",
+    "morgan": "^1.7.0",
+    "winston": "^2.2.0"
   },
   "author": "Saulo Matte Madalozzo",
   "license": "MIT",
