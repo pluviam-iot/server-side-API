@@ -153,7 +153,7 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 					if (typeof weather.date === 'undefined' || weather.date === null) {
 						weather.date = new Date().toISOString();
 					}
-					MongoClient.collection(collectionWeather, function (err, collection) {
+					db.collection(collectionWeather, function (err, collection) {
 						if (err) {
 							return callback(new Error('error db.collection'));
 						}
