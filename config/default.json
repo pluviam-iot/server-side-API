@@ -8,13 +8,8 @@
       "loggingDebug": true
     },
     "database": {
-    	"name": "pluviam",
-    	"username": "username",
-    	"password": "password",
     	"collectionStations": "stations",
-    	"collectionWeather": "weather",
-    	"server": "localhost",
-    	"port": 27017
+    	"collectionWeather": "weather"
     }
   }
 }

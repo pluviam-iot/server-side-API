@@ -4,12 +4,6 @@ var mongo = require('mongodb');
 var config = require('config');
 var util = require('../utils/util.js');
 
-var dbPort = config.get('server.database.port');
-var dbServer = config.get('server.database.server');
-var dbUser = 'saulo';
-var dbPassword = 'C0nnect123';
-
-var databaseName = config.get('server.database.name');
 var collectionWeather = config.get('server.database.collectionWeather');
 var collectionStations = config.get('server.database.collectionStations');
 

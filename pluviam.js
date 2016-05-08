@@ -27,6 +27,20 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// If undefined in our process load our local file
+var pluviamConfiguration = {};
+pluviamConfiguration.dbServer = process.env.DATABASE_SERVER;
+pluviamConfiguration.dbPort = process.env.DATABASE_PORT;
+pluviamConfiguration.dbUser = process.env.DATABASE_USER;
+pluviamConfiguration.dbPassword = process.env.DATABASE_PASSWORD;
+pluviamConfiguration.dbName = process.env.DATABASE_NAME;
+
+if (!process.env.DATABASE_SERVER) {
+	// TODO
+	// shutdown app
+	logger.info('Environment variables not found, exiting.');
+}
+
 var port = config.get('server.api.port') || 8080;        // set our port or 8080
 
 // ROUTES FOR API
@@ -66,6 +80,7 @@ logger.info('Magic happens on port ' + port);
 if (app.get('env') === 'development') {
 	var errorHandler = require('errorhandler');
 	app.use(errorHandler());
+	logger.info('Development environment, using errorhandler.');
 }
 
 process.on('SIGTERM', function () {
