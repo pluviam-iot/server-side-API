@@ -1,4 +1,5 @@
 'use strict';
+
 var logger = require('../utils/logger.js');
 var mongo = require('mongodb');
 var config = require('config');
@@ -9,12 +10,16 @@ var collectionStations = config.get('server.database.collectionStations');
 
 var assert = require('assert');
 
+// var env = require('../utils/env.js');
+
+var inputProcessor = require('../utils/inputProcessor.js');
+
 var MongoClient = require('mongodb').MongoClient;
 var db;
 var databaseURL = 'mongodb://madalozzo:C0nnect123@localhost:27017/pluviam';
 MongoClient.connect(databaseURL, function (err, connection) {
 	assert.equal(null, err);
-	console.log('Connected correctly to server.');
+	logger.info(util.getMicrotime() + ' - Connected to DB server.');
 	db = connection;
 	verifyCollections();
 });
@@ -25,7 +30,7 @@ function verifyCollections () {
 			logger.error('Collection ' + collectionWeather + ' not found!');
 			process.exit(1);
 		}else {
-			logger.info('Successful connection to ' + collectionWeather + '!');
+			logger.info(util.getMicrotime() + ' - Successful connection to ' + collectionWeather + '!');
 		}
 	});
 	db.collection(collectionStations, {strict: true}, function (err, collection) {
@@ -33,7 +38,7 @@ function verifyCollections () {
 			logger.error('Collection ' + collectionStations + ' not found!');
 			process.exit(1);
 		}else {
-			logger.info('Successful connection to ' + collectionStations + '!');
+			logger.info(util.getMicrotime() + ' - Successful connection to ' + collectionStations + '!');
 		}
 	});
 }
@@ -130,32 +135,34 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 		if (err) {
 			return callback(new Error('collection get'));
 		}
-		collection.findOne({'_id': new mongo.ObjectId(stationId)}, function (err, item) {
+		collection.findOne({'_id': new mongo.ObjectId(stationId)}, function (err, station) {
 			if (err) {
 				return callback(new Error('collection findOne'));
 			}else {
-				if (util.isNotEmpty(item)) {
-					if (util.isEmpty(item.internal.password) || util.isEmpty(item.internal.salt) || util.isEmpty(hashFromReq)) {
+				if (util.isNotEmpty(station)) {
+					if (!station.internal.token || !station.internal.salt || !hashFromReq) {
 						return callback(new Error('empty identify string'));
 					}
-					if (!util.isValidPassword(item.internal.password, item.internal.salt, hashFromReq)) {
+					if (!util.isValidToken(station.internal.token, station.internal.salt, hashFromReq)) {
 						return callback(new Error('invalid password'));
 					}
-					// TODO validate object and properties and make conversions
-					weather.stationId = item._id;
+					var processedWeather = inputProcessor.doWork(weather, station);
+					processedWeather.stationId = station._id;
 					console.log('weather date ' + weather.date);
 					if (typeof weather.date === 'undefined' || weather.date === null) {
-						weather.date = new Date().toISOString();
+						processedWeather.date = new Date().toISOString();
+					}else {
+						processedWeather.date = weather.date;
 					}
 					db.collection(collectionWeather, function (err, collection) {
 						if (err) {
 							return callback(new Error('error db.collection'));
 						}
-						collection.insert(weather, {safe: true}, function (err, result) {
+						collection.insert(processedWeather, {safe: true}, function (err, result) {
 							if (err) {
 								return callback(new Error('error'));
 							} else {
-								console.log('Adding weather: ' + JSON.stringify(weather));
+								console.log('Adding weather: ' + JSON.stringify(processedWeather));
 								console.log('Success collection.insert');
 								return callback(null, 'success collection.insert');
 							}

@@ -10,10 +10,10 @@ exports.addWeather = function (req, res) {
 	database.addWeather(stationId, hashFromReq, weather, function (err, success) {
 		if (err) {
 			res.json({ message: 'Error' });
-			console.log('fail addWeather' + err);
+			logger.error('fail addWeather' + err);
 		}else {
-			console.log('Success addWeather!');
-			res.json({ message: 'Sucess' });
+			logger.info('Success addWeather!');
+			res.json({ message: 'Success' });
 		}
 	});
 };

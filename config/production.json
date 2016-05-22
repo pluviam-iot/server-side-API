@@ -1,0 +1,15 @@
+{
+  "server": {
+    "frontend": {
+      "port": 80
+    },
+    "api": {
+      "port": 1337,
+      "loggingDebug": true
+    },
+    "database": {
+    	"collectionStations": "stations",
+    	"collectionWeather": "weather"
+    }
+  }
+}
