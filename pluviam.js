@@ -1,9 +1,11 @@
 'use strict';
 
-var util = require('./utils/util.js');
 var logger = require('./utils/logger.js');
+logger.info('Starting pluviam app...');
+var envs = require('./utils/env.js');
 
-logger.info('Starting pluviam app');
+var util = require('./utils/util.js');
+
 var express = require('express');
 var morgan = require('morgan');
 
@@ -13,7 +15,7 @@ var config = require('config');
 var app = express();
 logger.debug(util.getMicrotime() + ' - Overriding Express logger');
 // TODO logger
-logger.info(util.getMicrotime() + ' - Environment set: ' + app.get('env'));
+
 app.use(morgan('combined', { 'stream':
 {
 	write: function (str) { logger.info(str); }
@@ -57,7 +59,7 @@ app.use(express.static('public'));
 var pluviamServer = app.listen(port);
 logger.info(util.getMicrotime() + ' - Magic happens on port ' + port);
 
-if (app.get('env') === 'development') {
+if (envs.environment === 'development') {
 	var errorHandler = require('errorhandler');
 	app.use(errorHandler());
 	logger.info(util.getMicrotime() + ' - Development environment, using errorhandler.');
