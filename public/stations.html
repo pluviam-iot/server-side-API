@@ -176,7 +176,7 @@ function($scope, $http) {
 					drawChart(new google.visualization.ColumnChart(document.getElementById(dimension)), row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
 				}
 			});
-
+			loader.style.display = 'none';
 
 
 			$scope.weather = results.weather[results.weather.length-1];
