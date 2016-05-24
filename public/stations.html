@@ -23,6 +23,7 @@
 	<script src="//ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script>
 
 	<!-- External libs -->
+	<!-- future remove -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://www.google.com/jsapi"></script>
 <div ng-controller="PluviamContr">
@@ -107,10 +108,10 @@
 				</div>
 
 
-
-				<div flex id="temperature" style="width: 100%;">  <div layout="row" layout-sm="column" layout-align="space-around">
-    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-  </div></div>
+				<div layout="row" id="indeterminateLoader" layout-sm="column" layout-align="space-around">
+				<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+				</div>
+				<div flex id="temperature" style="width: 100%;"></div>
 				<div flex id="humidity" style="width: 100%;"></div>
 				<div flex id="precipitation" style="width: 100%;"></div>
 				<div flex id="wind" style="width: 100%;"></div>
@@ -147,59 +148,61 @@ angular.module('PluviamApp', ['ngMaterial'])
     .accentPalette('indigo');
 }).
 controller('PluviamContr', ['$scope','$http',
-                       function($scope, $http) {
+function($scope, $http) {
+	  $http.get('http://localhost:1337/r/stations/5733d44918fd93b0d0d999af').
+	    success(function(results, status, headers, config) {
+	    	//console.log("its ready?");
+	    	/*while (!isGoogleChartReady){
+	    		console.log("notready");
+	    	}*/
+	    	if (isGoogleChartReady){
+	    	console.log("ready");
 
-                    		  $http.get('http://localhost:1337/r/stations/5667b000ce453b44727e0174').
-                    		    success(function(results, status, headers, config) {
-                    		    	//console.log("its ready?");
-                    		    	/*while (!isGoogleChartReady){
-                    		    		console.log("notready");
-                    		    	}*/
-                    		    	if (isGoogleChartReady){
-                    		    	console.log("ready");
-                    		        var temperatureData = new google.visualization.DataTable();
-                    		        temperatureData.addColumn('datetime', 'Data/Hora');
-                    		        temperatureData.addColumn('number', 'Temperatura');
+			var loader = document.getElementById('indeterminateLoader');
+			//invert for each
+			$.each(results.station.inputs, function (i, row) {
+				var dimension = row.name;
+				console.log(dimension);
+				loader.insertAdjacentHTML('afterend', '<div flex id="' + dimension + '" style="width: 100%;"></div>');
+				var dimensionData = new google.visualization.DataTable();
+				dimensionData.addColumn('datetime', 'Data/Hora');
+				dimensionData.addColumn('number', row.shortName);
+				$.each(results.weather, function (i, row) {
+		      	  dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension])]);
+		        });
+				if (row.chartType === 'line'){
+					drawChart(new google.visualization.LineChart(document.getElementById(dimension)),  row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
+				}else if (row.chartType === 'column'){
+					drawChart(new google.visualization.ColumnChart(document.getElementById(dimension)), row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
+				}
+			});
 
-                    		        var humidityData = new google.visualization.DataTable();
-                    		        humidityData.addColumn('datetime', 'Data/Hora');
-                    		        humidityData.addColumn('number', 'Umidade');
 
-                    		        var pressureData = new google.visualization.DataTable();
-                    		        pressureData.addColumn('datetime', 'Data/Hora');
-                    		        pressureData.addColumn('number', 'Pressão');
 
-                    		        var windData = new google.visualization.DataTable();
-                    		        windData.addColumn('datetime', 'Data/Hora');
-                    		        windData.addColumn('number', 'Vento');
-                    		        windData.addColumn('number', 'Rajada');
+			$scope.weather = results.weather[results.weather.length-1];
+			$scope.station = results.station;
 
-                    		        var precipitationData = new google.visualization.DataTable();
-                    		        precipitationData.addColumn('datetime', 'Data/Hora');
-                    		        precipitationData.addColumn('number', 'Chuva');
-$scope.weather = results.weather[0];
-$scope.station = results.station;
-                    		        $.each(results.weather, function (i, row) {
-                    		      	  temperatureData.addRow([(new Date(row.date)),parseFloat(row.temperature)]);
-                    		      	  humidityData.addRow([(new Date(row.date)),parseFloat(row.humidity)]);
-                    		      	  pressureData.addRow([(new Date(row.date)),parseFloat(row.pressure)]);
-                    		      	  precipitationData.addRow([(new Date(row.date)),parseFloat(row.precipitation)]);
-                    		      	  windData.addRow([(new Date(row.date)),parseFloat(row.wind.speed.speed),parseFloat(row.wind.speed.gust)]);
-                    		        });
+	        // $.each(results.weather, function (i, row) {
+			//     	  temperatureData.addRow([(new Date(row.date)),parseFloat(row.temperature)]);
+			//     	  humidityData.addRow([(new Date(row.date)),parseFloat(row.humidity)]);
+			//     	  pressureData.addRow([(new Date(row.date)),parseFloat(row.pressure)]);
+			//     	  precipitationData.addRow([(new Date(row.date)),parseFloat(row.precipitation)]);
+			//     	  windData.addRow([(new Date(row.date)),parseFloat(row.windSpeed),parseFloat(row.windGust)]);
+	        // });
 
-                    		        drawChart(new google.visualization.LineChart(document.getElementById("temperature")), ['red'], 'Temperatura - °C', temperatureData);
-                    		        drawChart(new google.visualization.LineChart(document.getElementById("humidity")), ['blue'], 'Umidade Relativa - %', humidityData);
-                    		        drawChart(new google.visualization.ColumnChart(document.getElementById("precipitation")), ['blue'], 'Chuva - mm', precipitationData);
-                    		        drawChart(new google.visualization.AreaChart(document.getElementById("wind")), ['blue', 'red'], 'Vento - Km/h', windData);
-                    		        drawChart(new google.visualization.LineChart(document.getElementById("pressure")), ['green'], 'Pressão Atmosférica - Pa', pressureData);
-                    		    	}
-                    		    }).
-                    		    error(function(data, status, headers, config) {
-                    		      // log error
-                    		      console.log("fail");
-                    		    });
+	        // drawChart(new google.visualization.LineChart(document.getElementById("temperature")), ['red'], 'Temperatura - °C', temperatureData);
+	        // drawChart(new google.visualization.LineChart(document.getElementById("humidity")), ['blue'], 'Umidade Relativa - %', humidityData);
+	        // drawChart(new google.visualization.ColumnChart(document.getElementById("precipitation")), ['blue'], 'Chuva - mm', precipitationData);
+	        // drawChart(new google.visualization.AreaChart(document.getElementById("wind")), ['blue', 'red'], 'Vento - Km/h', windData);
+	        // drawChart(new google.visualization.LineChart(document.getElementById("pressure")), ['green'], 'Pressão Atmosférica - Pa', pressureData);
+	    	}
+	    }).
+	    error(function(data, status, headers, config) {
+	      // log error
+	      console.log("fail");
+	    });
 
-                     }
+     }
 
 ]);
 

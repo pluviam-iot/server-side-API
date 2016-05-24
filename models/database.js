@@ -81,14 +81,9 @@ exports.getWeather = function (stationId, callback) {
 				weather.precipitation = item.precipitation;
 				weather.pressure = item.pressure;
 				weather.brightness = item.brightness;
-				var wind = {};
-				var windSpeed = {};
-				windSpeed.gust = item.wind.speed.gust;
-				windSpeed.speed = item.wind.speed.speed;
-				wind.speed = windSpeed;
-				wind.direction = item.wind.direction;
-				wind.degree = item.wind.degree;
-				weather.wind = wind;
+				weather.windGust = item.windGust;
+				weather.windSpeed = item.windSpeed;
+				weather.windDirection = item.windDirection;
 				weather.date = item.date;
 				result.push(weather);
 			});
