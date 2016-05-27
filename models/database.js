@@ -10,13 +10,13 @@ var collectionStations = config.get('server.database.collectionStations');
 
 var assert = require('assert');
 
-// var env = require('../utils/env.js');
+var envs = require('../utils/env.js');
 
 var inputProcessor = require('../utils/inputProcessor.js');
 
 var MongoClient = require('mongodb').MongoClient;
 var db;
-var databaseURL = 'mongodb://pluviam:C0nnect123@localhost:27017/pluviam';
+var databaseURL = 'mongodb://' + envs.database.user + ':' + envs.database.password + '@' + envs.database.server + ':' + envs.database.port + '/' + envs.database.name;
 MongoClient.connect(databaseURL, function (err, connection) {
 	assert.equal(null, err);
 	logger.info(util.getMicrotime() + ' - Connected to DB server.');
