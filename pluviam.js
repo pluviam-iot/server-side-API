@@ -46,6 +46,11 @@ router.route('/stations/:id')
 	pluviam.addWeather(req, res);
 })
 .get(function (req, res) {
+	pluviam.getStationAndWeather(req, res);
+});
+
+router.route('/stations/:id/weather')
+.get(function (req, res) {
 	pluviam.getWeather(req, res);
 });
 

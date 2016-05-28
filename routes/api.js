@@ -29,7 +29,7 @@ exports.getAllStations = function (req, res) {
 	});
 };
 
-exports.getWeather = function (req, res) {
+exports.getStationAndWeather = function (req, res) {
 	var id = req.params.id;
 	console.log('Retrieving beehive: ' + id);
 
@@ -61,6 +61,23 @@ exports.getWeather = function (req, res) {
 			if (returnStation && returnWeather) {
 				res.send(result);
 			}
+		}
+	});
+};
+
+exports.getWeather = function (req, res) {
+	var id = req.params.id;
+	console.log('Retrieving beehive: ' + id);
+
+	var result = {};
+	database.getWeather(id, function (err, weather) {
+		if (err) {
+			// either fs.readFile or fs.writeFile returned an error
+			console.log(err.stack || err);
+		} else {
+			result.weather = weather;
+			console.log('Success!');
+			res.send(result);
 		}
 	});
 };

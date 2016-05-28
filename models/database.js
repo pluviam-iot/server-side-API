@@ -110,9 +110,9 @@ exports.getAllStations = function (callback) {
 			items.forEach(function (item) {
 				var station = {};
 				station.id = item._id;
-				station.fullName = item.station.fullName;
-				station.name = item.station.name;
-				station.location = item.station.location;
+				station.fullName = item.fullName;
+				station.name = item.name;
+				station.location = item.location;
 				station.location.coordinates = undefined;
 				stations.push(station);
 			});
