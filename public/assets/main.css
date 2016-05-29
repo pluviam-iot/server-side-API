@@ -1,0 +1,28 @@
+.align-center{text-align:center}
+.header-now-value{
+	font-family: Arial,Helvetica,sans-serif;
+	color: #333333;
+	font-weight: bold;
+	font-size: 36px;
+}
+.header-now-unit{
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 14px;
+	color: #333333;
+}
+.individual-units{
+}
+.temperature{
+	/*background-image: url('/images/Thermometer_Hot.png');*/
+	background-repeat: no-repeat;
+	background-position: center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.humidity{
+	/*background-image: url('/images/Raindrop.png');*/
+	background-position: no-repeat;
+	background-position: center;
+	min-width: 32px;
+	min-height: 32px;
+}
