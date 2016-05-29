@@ -149,7 +149,7 @@ angular.module('PluviamApp', ['ngMaterial'])
 }).
 controller('PluviamContr', ['$scope','$http',
 function($scope, $http) {
-	  $http.get('http://localhost:1337/r/stations/5733d44918fd93b0d0d999af').
+	  $http.get('/r/stations/5733d44918fd93b0d0d999af').
 	    success(function(results, status, headers, config) {
 	    	//console.log("its ready?");
 	    	/*while (!isGoogleChartReady){
@@ -160,20 +160,43 @@ function($scope, $http) {
 
 			var loader = document.getElementById('indeterminateLoader');
 			//invert for each
-			$.each(results.station.inputs, function (i, row) {
-				var dimension = row.name;
-				console.log(dimension);
-				loader.insertAdjacentHTML('afterend', '<div flex id="' + dimension + '" style="width: 100%;"></div>');
-				var dimensionData = new google.visualization.DataTable();
-				dimensionData.addColumn('datetime', 'Data/Hora');
-				dimensionData.addColumn('number', row.shortName);
-				$.each(results.weather, function (i, row) {
-		      	  dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension])]);
-		        });
-				if (row.chartType === 'line'){
-					drawChart(new google.visualization.LineChart(document.getElementById(dimension)),  row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
-				}else if (row.chartType === 'column'){
-					drawChart(new google.visualization.ColumnChart(document.getElementById(dimension)), row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
+			$.each(results.station.inputs.reverse(), function (i, row) {
+				if (row.chartType !== 'none'){
+					var dimension = row.name;
+					console.log(dimension);
+					var plotTogether = false;
+					var rowPlotTogether = '';
+					if(row.plotTogether !== ''){
+						plotTogether = row.plotTogether;
+						$.each(results.station.inputs, function (j, row2) {
+							if (row2.name === plotTogether){
+								rowPlotTogether = row2;
+								console.log(rowPlotTogether);
+							}
+						});
+					}
+					loader.insertAdjacentHTML('afterend', '<div flex id="' + dimension + '" style="width: 100%;"></div>');
+					var dimensionData = new google.visualization.DataTable();
+					dimensionData.addColumn('datetime', 'Data/Hora');
+					dimensionData.addColumn('number', row.shortName);
+					if (plotTogether){
+						console.log('added dimension data layer');
+						dimensionData.addColumn('number', rowPlotTogether.shortName);
+					}
+
+					$.each(results.weather, function (i, row) {
+						if (plotTogether){
+  							dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension]),parseFloat(row[plotTogether])]);
+  						}else{
+							dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension])]);
+						}
+			        });
+					if (row.chartType === 'line'){
+						drawChart(new google.visualization.LineChart(document.getElementById(dimension)),  row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
+					}else if (row.chartType === 'column'){
+						drawChart(new google.visualization.ColumnChart(document.getElementById(dimension)), row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
+					}
+
 				}
 			});
 			loader.style.display = 'none';
@@ -182,19 +205,6 @@ function($scope, $http) {
 			$scope.weather = results.weather[results.weather.length-1];
 			$scope.station = results.station;
 
-	        // $.each(results.weather, function (i, row) {
-			//     	  temperatureData.addRow([(new Date(row.date)),parseFloat(row.temperature)]);
-			//     	  humidityData.addRow([(new Date(row.date)),parseFloat(row.humidity)]);
-			//     	  pressureData.addRow([(new Date(row.date)),parseFloat(row.pressure)]);
-			//     	  precipitationData.addRow([(new Date(row.date)),parseFloat(row.precipitation)]);
-			//     	  windData.addRow([(new Date(row.date)),parseFloat(row.windSpeed),parseFloat(row.windGust)]);
-	        // });
-
-	        // drawChart(new google.visualization.LineChart(document.getElementById("temperature")), ['red'], 'Temperatura - °C', temperatureData);
-	        // drawChart(new google.visualization.LineChart(document.getElementById("humidity")), ['blue'], 'Umidade Relativa - %', humidityData);
-	        // drawChart(new google.visualization.ColumnChart(document.getElementById("precipitation")), ['blue'], 'Chuva - mm', precipitationData);
-	        // drawChart(new google.visualization.AreaChart(document.getElementById("wind")), ['blue', 'red'], 'Vento - Km/h', windData);
-	        // drawChart(new google.visualization.LineChart(document.getElementById("pressure")), ['green'], 'Pressão Atmosférica - Pa', pressureData);
 	    	}
 	    }).
 	    error(function(data, status, headers, config) {
@@ -205,27 +215,6 @@ function($scope, $http) {
      }
 
 ]);
-
-
-// app.controller("PostsCtrl", function($scope, $http)
-// 	});
-
-
-
-    // onload callback
-    //function drawCharts() {
-
-//       // JSON request
-//       var jsonData = $.ajax({
-//         url: 'http://localhost:1337/r/weather/5667b000ce453b44727e0174',
-//         dataType: 'json',
-//       }).done(function (results) {
-
-
-
-//       });
-
-//     }
 
     function drawChart(chart, color, title, data){
         var options = {
@@ -241,14 +230,6 @@ function($scope, $http) {
     		};
         chart.draw(data, options);
     }
-
-    // load chart lib
-//     google.load('visualization', '1', {
-//       packages: ['corechart']
-//     });
-
-//     // call drawChart once google charts is loaded
-//     google.setOnLoadCallback(drawCharts);
 
   </script>
 
