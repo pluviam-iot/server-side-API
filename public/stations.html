@@ -43,67 +43,27 @@
 			</div>
 		</md-toolbar>
 		<md-content layout-padding>
-
-
-				<div layout="row" layout-align="space-around center">
-					<div class="align-center">
-						<p class="md-caption">Estação Meteorológica Automática</p>
-						<p class="md-body-2">{{station}}</p>
-						<p class="md-caption">Lat, Long, Altitude {{weather}}</p>
-					</div>
+			<div layout="row" layout-align="space-around center">
+				<div class="align-center">
+					<p class="md-caption">Estação Meteorológica Automática</p>
+					<p class="md-body-2">{{station}}</p>
+					<p class="md-caption">Lat, Long, Altitude {{weather}}</p>
 				</div>
+			</div>
 
-
-				<div layout="row" layout-align="space-around center">
-					<div class="align-center">
-						<div class="individual-units temperature"></div>
-						<p class="md-caption">Temperatura</p>
-						<span class="header-now-value">{{weather.temperature}}</span>
-						<span class="header-now-unit">°C</span>
-					</div>
-					<div class="align-center">
-						<div class="individual-units humidity"></div>
-						<p class="md-caption">Umidade</p>
-						<span class="header-now-value">{{weather.humidity}}</span>
-						<span class="header-now-unit">%</span>
-					</div>
-					<div class="align-center">
-						<img src="/images/umbrella.png"/>
-						<p class="md-caption">Chuva</p>
-						<span class="header-now-value">{{weather.precipitation}}</span>
-						<span class="header-now-unit">mm</span>
-					</div>
-					<div class="align-center">
-						<img src="/images/wind.png"/>
-						<p class="md-caption">Vento</p>
-						<span class="header-now-value">{{weather.wind.speed.speed}}</span>
-						<span class="header-now-unit">km/h</span>
-						<span class="header-now-value">{{weather.wind.direction}}</span>
-					</div>
-					<div class="align-center">
-						<img src="/images/sunny.png"/>
-						<p class="md-caption">Luminosidade</p>
-						<span class="header-now-value">{{weather.brightness}}</span>
-						<span class="header-now-unit">W</span>
-					</div>
-					<div class="align-center">
-						<img src="/images/barometer.png"/>
-						<p class="md-caption">Pressão</p>
-						<span class="header-now-value">{{weather.pressure*10}}</span>
-						<span class="header-now-unit">hPa</span>
-					</div>
-
+			<div layout="row" layout-align="space-around center">
+				<div class="align-center" ng-repeat="dimension in station.inputs" ng-if="dimension.chartType != 'none'">
+					<div class="individual-units {{dimension.name}}"></div>
+					<p class="md-caption">{{dimension.shortName}}</p>
+					<span class="header-now-value">{{weather[dimension.name]}}</span>
+					<span class="header-now-unit">{{dimension.unit}}</span>
 				</div>
+			</div>
 
+			<div layout="row" id="indeterminateLoader" layout-sm="column" layout-align="space-around">
+			<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+			</div>
 
-				<div layout="row" id="indeterminateLoader" layout-sm="column" layout-align="space-around">
-				<md-progress-circular md-mode="indeterminate"></md-progress-circular>
-				</div>
-				<div flex id="temperature" style="width: 100%;"></div>
-				<div flex id="humidity" style="width: 100%;"></div>
-				<div flex id="precipitation" style="width: 100%;"></div>
-				<div flex id="wind" style="width: 100%;"></div>
-				<div flex id="pressure" style="width: 100%;"></div>
 		</md-content>
 		<md-toolbar>
 			<div layout="row">
@@ -135,6 +95,7 @@ angular.module('PluviamApp', ['ngMaterial'])
     .primaryPalette('blue')
     .accentPalette('indigo');
 }).
+
 controller('PluviamContr', ['$scope','$http',
 function($scope, $http) {
 	  $http.get('/r/stations/5733d44918fd93b0d0d999af').

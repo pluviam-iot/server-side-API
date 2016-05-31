@@ -13,16 +13,37 @@
 .individual-units{
 }
 .temperature{
-	/*background-image: url('/images/Thermometer_Hot.png');*/
-	background-repeat: no-repeat;
-	background-position: center;
+	background: url("../images/Thermometer_Hot.png") no-repeat center;
 	min-width: 32px;
 	min-height: 32px;
 }
 .humidity{
-	/*background-image: url('/images/Raindrop.png');*/
-	background-position: no-repeat;
-	background-position: center;
+	background: url("../images/Raindrop.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.pressure{
+	background: url("../images/Barometer.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.precipitation{
+	background: url("../images/Umbrella.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.windSpeed{
+	background: url("../images/Wind.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.windDirection{
+	background: url("../images/Vane_E.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.luminosity{
+	background: url("../images/Sunny.png") no-repeat center;
 	min-width: 32px;
 	min-height: 32px;
 }
