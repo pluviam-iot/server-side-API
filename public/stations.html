@@ -133,13 +133,16 @@ function($scope, $http) {
 						dimensionData.addColumn('number', rowPlotTogether.shortName);
 					}
 
-					$.each(results.weather, function (i, row) {
-						if (plotTogether){
-  							dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension]),parseFloat(row[rowPlotTogether.name])]);
-  						}else{
+					if (plotTogether){
+						$.each(results.weather, function (i, row) {
+								dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension]),parseFloat(row[rowPlotTogether.name])]);
+						}
+						}else{
+						$.each(results.weather, function (i, row) {
 							dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension])]);
 						}
-			        });
+					}
+					});
 					if (row.chartType === 'LineChart'){
 						drawChart(new google.visualization.LineChart(document.getElementById(dimension)),  row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
 					}else if (row.chartType === 'ColumnChart'){
