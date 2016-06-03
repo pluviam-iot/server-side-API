@@ -8,16 +8,6 @@ var isValidPassword = function (passwordFromDb, saltFromDb, hashFromReq) {
 	return (passwordDigested === passwordFromDb);
 };
 
-var isNotEmpty = function (item) {
-	return typeof item !== 'undefined' && item;
-};
-
-var isEmpty = function (item) {
-	return !(typeof item !== 'undefined' && item);
-};
-
 module.exports = {
-  isValidPassword: isValidPassword,
-  isEmpty: isEmpty,
-  isNotEmpty: isNotEmpty
+  isValidPassword: isValidPassword
 };

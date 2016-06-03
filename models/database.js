@@ -29,7 +29,7 @@ function verifyCollections () {
 		if (err) {
 			logger.error('Collection ' + collectionWeather + ' not found!');
 			process.exit(1);
-		}else {
+		} else {
 			logger.info(util.getMicrotime() + ' - Successful connection to ' + collectionWeather + '!');
 		}
 	});
@@ -37,7 +37,7 @@ function verifyCollections () {
 		if (err) {
 			logger.error('Collection ' + collectionStations + ' not found!');
 			process.exit(1);
-		}else {
+		} else {
 			logger.info(util.getMicrotime() + ' - Successful connection to ' + collectionStations + '!');
 		}
 	});
@@ -48,15 +48,19 @@ exports.getStationFull = function (stationId, callback) {
 	db.collection(collectionStations, function (err, collection) {
 		if (err) {
 			console.log('getStationFull fail id ' + stationId);
-			callback('error getting station');
+			return callback('error getting station');
 		}
 		collection.findOne({'_id': new mongo.ObjectId(stationId)}, function (err, station) {
 			if (err) {
 				console.log('getStationFull fail id ' + stationId);
-				callback('error getting station');
+				return callback('error getting station');
+			} else if (station) {
+				console.log(station);
+				return callback(null, station);
+			} else {
+				console.log('getStationFull not found id ' + stationId);
+				return callback('station not found');
 			}
-			console.log(station);
-			callback(null, station);
 		});
 	});
 };
@@ -66,7 +70,7 @@ exports.getWeather = function (stationId, callback) {
 	db.collection(collectionWeather, function (err, collection) {
 		if (err) {
 			console.log('getWeather fail id ' + stationId);
-			callback('error db.collection');
+			return callback('error db.collection');
 		}
 		collection.find({'stationId': new mongo.ObjectId(stationId)}).sort({date: 1}).toArray(function (err, items) {
 			if (err) {
@@ -87,7 +91,7 @@ exports.getWeather = function (stationId, callback) {
 				weather.date = item.date;
 				result.push(weather);
 			});
-			callback(null, result);
+			return callback(null, result);
 		});
 	});
 };
@@ -118,8 +122,7 @@ exports.getAllStations = function (callback) {
 			});
 
 			result.stations = stations;
-			callback(null, result);
-
+			return callback(null, result);
 		});
 	});
 };
@@ -133,7 +136,7 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 		collection.findOne({'_id': new mongo.ObjectId(stationId)}, function (err, station) {
 			if (err) {
 				return callback(new Error('collection findOne'));
-			}else {
+			} else {
 				if (util.isNotEmpty(station)) {
 					if (!station.internal.token || !station.internal.salt || !hashFromReq) {
 						return callback(new Error('empty identify string'));
@@ -146,7 +149,7 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 					console.log('weather date ' + weather.date);
 					if (typeof weather.date === 'undefined' || weather.date === null) {
 						processedWeather.date = new Date().toISOString();
-					}else {
+					} else {
 						processedWeather.date = weather.date;
 					}
 					db.collection(collectionWeather, function (err, collection) {
@@ -163,7 +166,7 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 							}
 						});
 					});
-				}else {
+				} else {
 					return callback(new Error('error item is empty'));
 				}
 			}
@@ -175,18 +178,14 @@ exports.getStation = function (stationId, callback) {
 	console.log('getStation - id: ' + stationId);
 	this.getStationFull(stationId, function (err, station) {
 		if (err) {
-			callback('error getting station');
-			return;
-		} else {
-			station.internal = undefined;
-			callback(null, station);
-			return;
+			return callback('error getting station');
 		}
+		station.internal = undefined;
+		return callback(null, station);
 	});
 };
 
 exports.closeConnections = function (callback) {
 	db.close();
-	callback(null);
-	return;
+	return callback(null);
 };

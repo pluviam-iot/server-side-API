@@ -44,10 +44,11 @@
 		</md-toolbar>
 		<md-content layout-padding>
 			<div layout="row" layout-align="space-around center">
-				<div class="align-center">
-					<p class="md-caption">Estação Meteorológica Automática</p>
-					<p class="md-body-2">{{station}}</p>
-					<p class="md-caption">Lat, Long, Altitude {{weather}}</p>
+				<div class="align-center" ng-if='station !== undefined'>
+					<p class="md-body-3">{{station.fullName}}</p>
+					<p class="md-body-2">{{station.location.country}} - {{station.location.county}} - {{station.location.city}}</p>
+					<p class="md-caption">{{station.location.coordinates.latitude}}, {{station.location.coordinates.longitude}}, {{station.location.coordinates.altitude}}m</p>
+					<p class="md-caption">Última atualização: <strong ng-bind="weather.date | date:'yyyy/MM/dd hh:mm UTC'" >{{weather.date}}</strong></p>
 				</div>
 			</div>
 
@@ -63,6 +64,7 @@
 			<div layout="row" id="indeterminateLoader" layout-sm="column" layout-align="space-around">
 			<md-progress-circular md-mode="indeterminate"></md-progress-circular>
 			</div>
+			<div style="display:none" id="graphsBase"></div>
 
 		</md-content>
 		<md-toolbar>
@@ -100,6 +102,9 @@ controller('PluviamContr', ['$scope','$http',
 function($scope, $http) {
 	  $http.get('/r/stations/5733d44918fd93b0d0d999af').
 	    success(function(results, status, headers, config) {
+			$scope.weather = results.weather[results.weather.length-1];
+			$scope.station = results.station;
+
 	    	//console.log("its ready?");
 	    	/*while (!isGoogleChartReady){
 	    		console.log("notready");
@@ -108,8 +113,9 @@ function($scope, $http) {
 	    	console.log("ready");
 
 			var loader = document.getElementById('indeterminateLoader');
+			var graphsDisplay =  document.getElementById('graphsBase');
 			//invert for each
-			$.each(results.station.inputs.reverse(), function (i, row) {
+			$.each(results.station.inputs, function (i, row) {
 				if (row.chartType !== 'none'){
 					var dimension = row.name;
 					console.log(dimension);
@@ -124,7 +130,7 @@ function($scope, $http) {
 							}
 						});
 					}
-					loader.insertAdjacentHTML('afterend', '<div flex id="' + dimension + '" style="width: 100%;"></div>');
+					graphsDisplay.insertAdjacentHTML('beforebegin', '<div flex id="' + dimension + '" style="width: 100%;"></div>');
 					var dimensionData = new google.visualization.DataTable();
 					dimensionData.addColumn('datetime', 'Data/Hora');
 					dimensionData.addColumn('number', row.shortName);
@@ -136,13 +142,12 @@ function($scope, $http) {
 					if (plotTogether){
 						$.each(results.weather, function (i, row) {
 								dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension]),parseFloat(row[rowPlotTogether.name])]);
-						}
-						}else{
+						});
+					}else{
 						$.each(results.weather, function (i, row) {
 							dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension])]);
-						}
+						});
 					}
-					});
 					if (row.chartType === 'LineChart'){
 						drawChart(new google.visualization.LineChart(document.getElementById(dimension)),  row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
 					}else if (row.chartType === 'ColumnChart'){
@@ -154,10 +159,6 @@ function($scope, $http) {
 				}
 			});
 			loader.style.display = 'none';
-
-
-			$scope.weather = results.weather[results.weather.length-1];
-			$scope.station = results.station;
 
 	    	}
 	    }).
