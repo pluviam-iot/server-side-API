@@ -14,7 +14,6 @@ var config = require('config');
 
 var app = express();
 logger.debug(util.getMicrotime() + ' - Overriding Express logger');
-// TODO logger
 
 app.use(morgan('combined', { 'stream':
 {
@@ -30,10 +29,15 @@ app.use(bodyParser.json());
 var port = config.get('server.api.port') || 8080;        // set our port or 8080
 
 // Routes for API
-var router = express.Router();              // get an instance of the express Router
+var router = express.Router();
+var routerBackend = express.Router();
 
 router.get('/', function (req, res) {
-	res.json({ message: 'coded while the baby sleeps' });
+	res.json({ service: 'Pluviam API', version: 0.87, message: 'coded while the baby sleeps' });
+});
+
+routerBackend.get('/', function (req, res) {
+	res.json({ service: 'Pluviam Backend API', version: 0.87, message: 'coded while the baby sleeps' });
 });
 
 router.route('/stations/')
@@ -41,10 +45,12 @@ router.route('/stations/')
 	pluviam.getAllStations(req, res);
 });
 
-router.route('/stations/:id')
+routerBackend.route('/stations/:id')
 .post(function (req, res) {
 	pluviam.addWeather(req, res);
-})
+});
+
+router.route('/stations/:id')
 .get(function (req, res) {
 	pluviam.getStationAndWeather(req, res);
 });
@@ -56,11 +62,11 @@ router.route('/stations/:id/weather')
 
 // routes base origin
 app.use('/r', router);
+app.use('/b', routerBackend);
 
 app.use(express.static('public'));
 
-// START THE SERVER
-// ===========================================================================
+// start the server
 var pluviamServer = app.listen(port);
 logger.info(util.getMicrotime() + ' - Magic happens on port ' + port);
 
@@ -70,7 +76,7 @@ if (envs.environment === 'development') {
 	logger.info(util.getMicrotime() + ' - Development environment, using errorhandler.');
 }
 
-// TODO
+// TODO some errors doing this
 // shutdown app
 process.on('SIGTERM', function () {
 	console.log('Shutdown process - Sigterm signal, lets shutdown.');
