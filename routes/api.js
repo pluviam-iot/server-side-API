@@ -11,7 +11,7 @@ exports.addWeather = function (req, res) {
 		if (err) {
 			res.json({ message: 'Error' });
 			logger.error('fail addWeather' + err);
-		}else {
+		} else {
 			logger.info('Success addWeather!');
 			res.json({ message: 'Success' });
 		}

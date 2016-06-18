@@ -5,16 +5,16 @@ var randomstring = require('randomstring');
 
 var startTime = process.hrtime();
 var salt = randomstring.generate({
-  length: 32,
-  charset: 'alphanumeric',
-  capitalization: 'lowercase'
+	length: 32,
+	charset: 'alphanumeric',
+	capitalization: 'lowercase'
 });
 
 var token = randomstring.generate({
-  length: 16,
-  capitalization: 'lowercase',
-  readable: true,
-  charset: 'alphanumeric'
+	length: 16,
+	capitalization: 'lowercase',
+	readable: true,
+	charset: 'alphanumeric'
 });
 
 var passwordDigested = crypto.createHmac('sha256', salt).update(token).digest('hex');

@@ -32,6 +32,14 @@ var port = config.get('server.api.port') || 8080;        // set our port or 8080
 var router = express.Router();
 var routerBackend = express.Router();
 
+// cors
+// TODO better origin validator
+app.all('*', function (req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*');
+	res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+	res.header('Access-Control-Allow-Headers', 'Content-Type');
+	next();
+});
 router.get('/', function (req, res) {
 	res.json({ service: 'Pluviam API', version: 0.87, message: 'coded while the baby sleeps' });
 });
