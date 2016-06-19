@@ -40,11 +40,11 @@ function ($routeProvider, $locationProvider) {
 
 // create the controller and inject Angular's $scope
 pluviamApp.controller('mainController', function ($scope) {
-	$scope.message = 'Everyone come and see how good I look!';
+	$scope.message = 'main!';
 });
 
 pluviamApp.controller('aboutController', function ($scope) {
-	$scope.message = 'Look! I am an about page.';
+	$scope.message = 'Nada aqui, ainda';
 });
 
 pluviamApp.controller('StationsController', ['$scope', '$http', '$routeParams',
