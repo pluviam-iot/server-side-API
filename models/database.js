@@ -115,7 +115,7 @@ exports.getAllStations = function (callback) {
 				var station = {};
 				station.id = item._id;
 				station.fullName = item.fullName;
-				station.name = item.name;
+				station.urlName = item.urlName;
 				station.location = item.location;
 				station.location.coordinates = undefined;
 				stations.push(station);
