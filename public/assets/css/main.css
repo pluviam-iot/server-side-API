@@ -1,0 +1,63 @@
+.align-center { text-align: center; }
+
+.header-now-value {
+	font-family: Arial,Helvetica,sans-serif;
+	color: #333333;
+	font-weight: bold;
+	font-size: 30px;
+}
+.header-now-unit{
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 14px;
+	color: #333333;
+}
+.individual-units{
+}
+.temperature{
+	background: url("../images/Thermometer_Hot.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.humidity{
+	background: url("../images/Raindrop.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px
+}
+.pressure{
+	background: url("../images/Barometer.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.precipitation{
+	background: url("../images/Umbrella.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.windSpeed{
+	background: url("../images/Wind.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.windDirection{
+	background: url("../images/Vane_E.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+.luminosity{
+	background: url("../images/Sunny.png") no-repeat center;
+	min-width: 32px;
+	min-height: 32px;
+}
+
+.background-image{
+	background-image: url("../images/background2.jpg");
+	position: fixed;
+	bottom: 0px;
+	right: 0px;
+	z-index: 1;
+	padding: 0px;
+	margin: 0px;
+}
+.transparent{
+	background-color: transparent !important;
+}
