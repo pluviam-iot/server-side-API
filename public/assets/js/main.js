@@ -28,7 +28,7 @@ function ($routeProvider, $locationProvider) {
 		templateUrl: 'about.html',
 		controller: 'aboutController'
 	})
-	.when('/:country/:county/:city/:station', {
+	.when('/:country/:county/:city/:stationName', {
 		templateUrl: 'stations.html',
 		controller: 'StationsController'
 	})
@@ -47,77 +47,126 @@ pluviamApp.controller('aboutController', function ($scope) {
 	$scope.message = 'Look! I am an about page.';
 });
 
-pluviamApp.controller('StationsController', ['$scope', '$http',
-function ($scope, $http) {
-	$http.get('//local.api.pluvi.am/stations/5733d44918fd93b0d0d999af')
+pluviamApp.controller('StationsController', ['$scope', '$http', '$routeParams',
+function ($scope, $http, $routeParams) {
+	console.log($routeParams);
+	var stationId = '';
+	var paramCountry = $routeParams.country.toLowerCase();
+	var paramCounty = $routeParams.county.toLowerCase();
+	var paramCity = $routeParams.city.toLowerCase();
+	var paramStationName = $routeParams.stationName.toLowerCase();
+	$http.get('//api.pluvi.am/stations/')
 		.success(function (results, status, headers, config) {
-			$scope.weather = results.weather[results.weather.length - 1];
-			$scope.station = results.station;
+			$.each(results.stations, function (i, row) {
+				console.log(row);
+				if (paramCountry === row.location.countryCode.toLowerCase()) {
+					console.log(paramCountry);
+					if (paramCounty === row.location.countyCode.toLowerCase()) {
+						console.log(paramCounty);
+						if (paramCity === row.location.urlCity.toLowerCase()) {
+							console.log(paramCity);
+							if (paramStationName === row.urlName.toLowerCase()) {
+								console.log(paramStationName);
+								stationId = row.id;
 
-			/* console.log("its ready?");
-			while (!isGoogleChartReady){
-			console.log("notready");
-			}*/
-			if (isGoogleChartReady) {
-				console.log('ready');
 
-				var loader = document.getElementById('indeterminateLoader');
-				var graphsDisplay = document.getElementById('graphsBase');
-				// invert for each
-				$.each(results.station.inputs, function (i, row) {
-					if (row.chartType !== 'none') {
-						var dimension = row.name;
-						console.log(dimension);
-						var plotTogether = false;
-						var rowPlotTogether = '';
-						if(row.plotTogether !== '') {
-							plotTogether = row.plotTogether;
-							$.each(results.station.inputs, function (j, row2) {
-								if (row2.name === plotTogether) {
-									rowPlotTogether = row2;
-									console.log(rowPlotTogether);
-								}
-							});
-					}
-					graphsDisplay.insertAdjacentHTML('beforebegin', '<div flex id="' + dimension +
-						'" style="width: 100%;"></div>');
-					var dimensionData = new google.visualization.DataTable();
-					dimensionData.addColumn('datetime', 'Data/Hora');
-					dimensionData.addColumn('number', row.shortName);
-					if (plotTogether){
-						console.log('added dimension data layer');
-						dimensionData.addColumn('number', rowPlotTogether.shortName);
-					}
 
-					if (plotTogether){
-						$.each(results.weather, function (i, row) {
-								dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension]),
-									parseFloat(row[rowPlotTogether.name])]);
-						});
-					}else{
-						$.each(results.weather, function (i, row) {
-							dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension])]);
-						});
-					}
-					if (row.chartType === 'LineChart'){
-						drawChart(new google.visualization.LineChart(document.getElementById(dimension)),
-							row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
-					}else if (row.chartType === 'ColumnChart'){
-						drawChart(new google.visualization.ColumnChart(document.getElementById(dimension)),
-							row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
-					}else if (row.chartType === 'AreaChart'){
-						drawChart(new google.visualization.AreaChart(document.getElementById(dimension)),
-							row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
+
+
+
+
+								$http.get('//api.pluvi.am/stations/' + stationId)
+									.success(function (results, status, headers, config) {
+										$scope.weather = results.weather[results.weather.length - 1];
+										$scope.station = results.station;
+
+										/* console.log("its ready?");
+										while (!isGoogleChartReady){
+										console.log("notready");
+										}*/
+										if (isGoogleChartReady) {
+											console.log('ready');
+
+											var loader = document.getElementById('indeterminateLoader');
+											var graphsDisplay = document.getElementById('graphsBase');
+											// invert for each
+											$.each(results.station.inputs, function (i, row) {
+												if (row.chartType !== 'none') {
+													var dimension = row.name;
+													console.log(dimension);
+													var plotTogether = false;
+													var rowPlotTogether = '';
+													if(row.plotTogether !== '') {
+														plotTogether = row.plotTogether;
+														$.each(results.station.inputs, function (j, row2) {
+															if (row2.name === plotTogether) {
+																rowPlotTogether = row2;
+																console.log(rowPlotTogether);
+															}
+														});
+												}
+												graphsDisplay.insertAdjacentHTML('beforebegin', '<div flex id="' + dimension +
+													'" style="width: 100%;"></div>');
+												var dimensionData = new google.visualization.DataTable();
+												dimensionData.addColumn('datetime', 'Data/Hora');
+												dimensionData.addColumn('number', row.shortName);
+												if (plotTogether){
+													console.log('added dimension data layer');
+													dimensionData.addColumn('number', rowPlotTogether.shortName);
+												}
+
+												if (plotTogether){
+													$.each(results.weather, function (i, row) {
+															dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension]),
+																parseFloat(row[rowPlotTogether.name])]);
+													});
+												}else{
+													$.each(results.weather, function (i, row) {
+														dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension])]);
+													});
+												}
+												if (row.chartType === 'LineChart'){
+													drawChart(new google.visualization.LineChart(document.getElementById(dimension)),
+														row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
+												}else if (row.chartType === 'ColumnChart'){
+													drawChart(new google.visualization.ColumnChart(document.getElementById(dimension)),
+														row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
+												}else if (row.chartType === 'AreaChart'){
+													drawChart(new google.visualization.AreaChart(document.getElementById(dimension)),
+														row.chartColors, row.shortName + ' - ' + row.unit, dimensionData);
+												}
+											}
+										});
+									loader.style.display = 'none';
+									}
+								})
+								.error(function(data, status, headers, config) {
+								  // log error
+								  console.log("fail");
+								});
+
+
+
+
+
+
+
+
+
+
+
+							}
+						}
 					}
 				}
 			});
-		loader.style.display = 'none';
-		}
-	}).
-	error(function(data, status, headers, config) {
-	  // log error
-	  console.log("fail");
+	})
+	.error(function (data, status, headers, config) {
+		console.log('fail');
 	});
+
+
+
 
  }
 
