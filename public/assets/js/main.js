@@ -17,6 +17,10 @@ pluviamApp.config(function ($mdThemingProvider) {
 		.accentPalette('indigo');
 });
 
+pluviamApp.config(['$compileProvider', function ($compileProvider) {
+	$compileProvider.debugInfoEnabled(false);
+}]);
+
 pluviamApp.config(['$routeProvider', '$locationProvider',
 function ($routeProvider, $locationProvider) {
 	$routeProvider
