@@ -1,0 +1,14 @@
+/* TEAM */
+	Full Stack Developer: Saulo Matté Madalozzo.
+	Email: saulo@pluvi.am
+	Twitter: @madalozzo
+	Location: Erechim, Rio Grande do Sul, Brazil
+
+/* THANKS */
+	Site Namer: Marcelo Onhate
+
+/* SITE */
+	Last update: 2016/06
+	Standards: HTML5, CSS3
+	Components: Angular
+	Software: Atom
