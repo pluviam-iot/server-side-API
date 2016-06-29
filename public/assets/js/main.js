@@ -54,7 +54,7 @@ pluviamApp.controller('aboutController', function ($scope) {
 pluviamApp.controller('StationsController', ['$scope', '$http', '$routeParams',
 function ($scope, $http, $routeParams) {
 	console.log($routeParams);
-	var API_URL_BASE = '//local.api.pluvi.am';
+	var API_URL_BASE = '//api.pluvi.am';
 	var stationId = '';
 	var paramCountry = $routeParams.country.toLowerCase();
 	var paramCounty = $routeParams.county.toLowerCase();
