@@ -5,7 +5,7 @@ var database = require('../models/database.js');
 
 exports.addWeather = function (req, res) {
 	var weather = req.body;
-	console.log("req.body " + req.body);
+	console.log('req.body ' + req.body);
 	var stationId = req.params.id;
 	var hashFromReq = req.get('X-Pluviam-Token');
 	database.addWeather(stationId, hashFromReq, weather, function (err, success) {

@@ -72,7 +72,13 @@ exports.getWeather = function (stationId, callback) {
 			console.log('getWeather fail id ' + stationId);
 			return callback('error db.collection');
 		}
-		collection.find({'stationId': new mongo.ObjectId(stationId)}).sort({date: 1}).toArray(function (err, items) {
+		// 30 hours in milliseconds
+		var calcDate = Date.now();
+		calcDate -= 108000000;
+		//calcDate = new Date(calcDate).toISOString();
+		 //var start_date = new Date(calcDate);
+		 //logger.info('start_date ' + start_date); , 'date': {'$gte': new Date(start_date)}
+		 collection.find({ 'stationId': new mongo.ObjectId(stationId) }).sort({date: 1}).toArray(function (err, items) {
 			if (err) {
 				console.log('getWeather fail id ' + stationId);
 				return result;
@@ -148,7 +154,7 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 					processedWeather.stationId = station._id;
 					console.log('weather date ' + weather.date);
 					if (typeof weather.date === 'undefined' || weather.date === null) {
-						processedWeather.date = new Date().toISOString();
+						processedWeather.date = new Date();
 					} else {
 						processedWeather.date = weather.date;
 					}
