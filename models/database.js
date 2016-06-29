@@ -75,10 +75,10 @@ exports.getWeather = function (stationId, callback) {
 		// 30 hours in milliseconds
 		var calcDate = Date.now();
 		calcDate -= 108000000;
-		//calcDate = new Date(calcDate).toISOString();
-		 //var start_date = new Date(calcDate);
-		 //logger.info('start_date ' + start_date); , 'date': {'$gte': new Date(start_date)}
-		 collection.find({ 'stationId': new mongo.ObjectId(stationId) }).sort({date: 1}).toArray(function (err, items) {
+		calcDate = new Date(calcDate);
+		var start_date = new Date(calcDate);
+		logger.info('start_date ' + start_date);
+		collection.find({ 'stationId': new mongo.ObjectId(stationId), 'date': {'$gte': new Date(start_date)} }).sort({date: 1}).toArray(function (err, items) {
 			if (err) {
 				console.log('getWeather fail id ' + stationId);
 				return result;

@@ -54,12 +54,13 @@ pluviamApp.controller('aboutController', function ($scope) {
 pluviamApp.controller('StationsController', ['$scope', '$http', '$routeParams',
 function ($scope, $http, $routeParams) {
 	console.log($routeParams);
+	var API_URL_BASE = '//local.api.pluvi.am';
 	var stationId = '';
 	var paramCountry = $routeParams.country.toLowerCase();
 	var paramCounty = $routeParams.county.toLowerCase();
 	var paramCity = $routeParams.city.toLowerCase();
 	var paramStationName = $routeParams.stationName.toLowerCase();
-	$http.get('//api.pluvi.am/stations/')
+	$http.get(API_URL_BASE + '/stations/')
 		.success(function (results, status, headers, config) {
 			$.each(results.stations, function (i, row) {
 				console.log(row);
@@ -79,7 +80,7 @@ function ($scope, $http, $routeParams) {
 
 
 
-								$http.get('//api.pluvi.am/stations/' + stationId)
+								$http.get(API_URL_BASE + '/stations/' + stationId)
 									.success(function (results, status, headers, config) {
 										$scope.weather = results.weather[results.weather.length - 1];
 										$scope.station = results.station;
