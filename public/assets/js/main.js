@@ -51,10 +51,10 @@ pluviamApp.controller('aboutController', function ($scope) {
 	$scope.message = 'Nada aqui, ainda';
 });
 
-pluviamApp.controller('StationsController', ['$scope', '$http', '$routeParams',
-function ($scope, $http, $routeParams) {
+pluviamApp.controller('StationsController', ['$scope',  '$rootScope', '$http', '$routeParams', '$mdDialog', '$mdMedia',
+function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 	console.log($routeParams);
-	var API_URL_BASE = '//api.pluvi.am';
+	var API_URL_BASE = '//local.api.pluvi.am';
 	var stationId = '';
 	var paramCountry = $routeParams.country.toLowerCase();
 	var paramCounty = $routeParams.county.toLowerCase();
@@ -62,7 +62,7 @@ function ($scope, $http, $routeParams) {
 	var paramStationName = $routeParams.stationName.toLowerCase();
 	$http.get(API_URL_BASE + '/stations/')
 		.success(function (results, status, headers, config) {
-			$.each(results.stations, function (i, row) {
+				angular.forEach(results.stations, function (row, i) {
 				console.log(row);
 				if (paramCountry === row.location.countryCode.toLowerCase()) {
 					console.log(paramCountry);
@@ -84,6 +84,7 @@ function ($scope, $http, $routeParams) {
 									.success(function (results, status, headers, config) {
 										$scope.weather = results.weather[results.weather.length - 1];
 										$scope.station = results.station;
+										$rootScope.station = results.station;
 
 										/* console.log("its ready?");
 										while (!isGoogleChartReady){
@@ -95,7 +96,7 @@ function ($scope, $http, $routeParams) {
 											var loader = document.getElementById('indeterminateLoader');
 											var graphsDisplay = document.getElementById('graphsBase');
 											// invert for each
-											$.each(results.station.inputs, function (i, row) {
+											angular.forEach(results.station.inputs, function (row, i) {
 												if (row.chartType !== 'none') {
 													var dimension = row.name;
 													console.log(dimension);
@@ -103,7 +104,7 @@ function ($scope, $http, $routeParams) {
 													var rowPlotTogether = '';
 													if(row.plotTogether !== '') {
 														plotTogether = row.plotTogether;
-														$.each(results.station.inputs, function (j, row2) {
+														angular.forEach(results.station.inputs, function (row2, j) {
 															if (row2.name === plotTogether) {
 																rowPlotTogether = row2;
 																console.log(rowPlotTogether);
@@ -111,7 +112,7 @@ function ($scope, $http, $routeParams) {
 														});
 												}
 												graphsDisplay.insertAdjacentHTML('beforebegin', '<div flex id="' + dimension +
-													'" style="width: 100%;"></div>');
+													'"></div>');
 												var dimensionData = new google.visualization.DataTable();
 												dimensionData.addColumn('datetime', 'Data/Hora');
 												dimensionData.addColumn('number', row.shortName);
@@ -121,12 +122,12 @@ function ($scope, $http, $routeParams) {
 												}
 
 												if (plotTogether){
-													$.each(results.weather, function (i, row) {
+													angular.forEach(results.weather, function (row, i) {
 															dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension]),
 																parseFloat(row[rowPlotTogether.name])]);
 													});
 												}else{
-													$.each(results.weather, function (i, row) {
+													angular.forEach(results.weather, function (row, i) {
 														dimensionData.addRow([(new Date(row.date)),parseFloat(row[dimension])]);
 													});
 												}
@@ -170,12 +171,53 @@ function ($scope, $http, $routeParams) {
 		console.log('fail');
 	});
 
-
-
-
+	$scope.showPhotos = function (event) {
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+      $mdDialog.show({
+        controller: PhotosController,
+        templateUrl: 'photos.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose: true,
+        fullscreen: useFullScreen
+      })
+      .then(function (answer) {
+        $scope.status = 'You said the information was "' + answer + '".';
+      }, function() {
+        $scope.status = 'You cancelled the dialog.';
+      });
+      $scope.$watch(function () {
+        return $mdMedia('xs') || $mdMedia('sm');
+      }, function (wantsFullScreen) {
+        $scope.customFullscreen = true;
+      });
+    };
+	$scope.showInfos = function (event) {
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+      $mdDialog.show({
+        controller: InfoController,
+        templateUrl: 'infos.html',
+        parent: angular.element(document.body),
+        targetEvent: event,
+        clickOutsideToClose: true,
+        fullscreen: useFullScreen
+      })
+      .then(function (answer) { 
+        $scope.status = 'You said the information was "' + answer + '".';
+      }, function() {
+        $scope.status = 'You cancelled the dialog.';
+      });
+      $scope.$watch(function () {
+        return $mdMedia('xs') || $mdMedia('sm');
+      }, function (wantsFullScreen) {
+        $scope.customFullscreen = true;
+      });
+    };
  }
 
 ]);
+
+
 
 function drawChart(chart, color, title, data){
 	var options = {
@@ -193,6 +235,31 @@ function drawChart(chart, color, title, data){
 }
 
 
+function PhotosController($scope, $rootScope, $mdDialog) {
+  $scope.station = $rootScope.station;
+  $scope.hide = function() {
+    $mdDialog.hide();
+  };
+  $scope.cancel = function() {
+    $mdDialog.cancel();
+  };
+  $scope.answer = function(answer) {
+    $mdDialog.hide(answer);
+  };
+}
+
+function InfoController($scope, $rootScope, $mdDialog) {
+  $scope.station = $rootScope.station;
+  $scope.hide = function() {
+    $mdDialog.hide();
+  };
+  $scope.cancel = function() {
+    $mdDialog.cancel();
+  };
+  $scope.answer = function(answer) {
+    $mdDialog.hide(answer);
+  };
+}
 
 
 

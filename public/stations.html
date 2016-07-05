@@ -2,6 +2,18 @@
 	<div layout="row" layout-align="space-around center">
 		<div class="align-center" ng-if='station !== undefined'>
 			<p class="md-body-3">{{station.fullName}}</p>
+			<!-- <md-button class="md-primary md-raised" ng-click="showPhotos($event)">
+					Photos
+					<md-tooltip md-direction="top">
+					  Fotos
+					</md-tooltip>
+			</md-button>
+			<md-button class="md-primary md-raised" ng-click="showInfos($event)">
+				  Infos
+				  <md-tooltip md-direction="top">
+					Informações
+				  </md-tooltip>
+			</md-button> -->
 			<p class="md-body-2">{{station.location.country}} - {{station.location.county}} - {{station.location.city}}</p>
 			<p class="md-caption">{{station.location.coordinates.latitude}}, {{station.location.coordinates.longitude}}, {{station.location.coordinates.altitude}}m</p>
 			<p class="md-caption">Última atualização: <strong ng-bind="weather.date | date:'yyyy/MM/dd hh:mm UTC'" >{{weather.date}}</strong></p>
