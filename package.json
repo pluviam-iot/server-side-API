@@ -1,7 +1,7 @@
 {
   "name": "pluviam",
-  "version": "0.6.0",
-  "description": "beeyard pluviam",
+  "version": "0.9.0",
+  "description": "pluviam",
   "main": "pluviam.js",
   "scripts": {
     "test": "echo \"Error: no test specified! Configure in package.json\" && exit 1"
@@ -11,13 +11,13 @@
     "node.js"
   ],
   "dependencies": {
-    "body-parser": "^1.14.1",
-    "config": "*",
-    "errorhandler": "^1.4.2",
-    "express": "*",
-    "mongodb": "*",
-    "morgan": "^1.7.0",
-    "winston": "^2.2.0"
+    "body-parser": "^1.15.2",
+    "config": "^1.21.0",
+    "errorhandler": "*",
+    "express": "^4.14.0",
+    "mongodb": "^2.1.21",
+    "morgan": "*",
+    "winston": "*"
   },
   "author": "Saulo Matte Madalozzo",
   "license": "MIT",

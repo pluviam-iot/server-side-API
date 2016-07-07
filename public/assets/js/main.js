@@ -1,11 +1,9 @@
 'use strict';
 var isGoogleChartReady = false;
 /* Controllers */
-google.load('visualization', '1', {
-	packages: ['corechart']
-});
+google.charts.load('current', {packages: ['corechart']});
 
-google.setOnLoadCallback(function () {
+google.charts.setOnLoadCallback(function () {
 	isGoogleChartReady = true;
 });
 
@@ -54,7 +52,7 @@ pluviamApp.controller('aboutController', function ($scope) {
 pluviamApp.controller('StationsController', ['$scope',  '$rootScope', '$http', '$routeParams', '$mdDialog', '$mdMedia',
 function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 	console.log($routeParams);
-	var API_URL_BASE = '//local.api.pluvi.am';
+	var API_URL_BASE = '//api.pluvi.am';
 	var stationId = '';
 	var paramCountry = $routeParams.country.toLowerCase();
 	var paramCounty = $routeParams.county.toLowerCase();
@@ -202,7 +200,7 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
         clickOutsideToClose: true,
         fullscreen: useFullScreen
       })
-      .then(function (answer) { 
+      .then(function (answer) {
         $scope.status = 'You said the information was "' + answer + '".';
       }, function() {
         $scope.status = 'You cancelled the dialog.';
