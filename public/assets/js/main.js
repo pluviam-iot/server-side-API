@@ -84,11 +84,11 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 										$scope.station = results.station;
 										$rootScope.station = results.station;
 
-										/* console.log("its ready?");
+										/*console.log("its ready?");
 										while (!isGoogleChartReady){
-										console.log("notready");
+											//console.log("notready");
 										}*/
-										if (isGoogleChartReady) {
+										if (true) {
 											console.log('ready');
 
 											var loader = document.getElementById('indeterminateLoader');
@@ -225,6 +225,7 @@ function drawChart(chart, color, title, data){
 		colors:color,
 		legend: {position: 'none'},
 		height: 300,
+		backgroundColor: '#FAFAFA',
 		title: title,
 		vAxis: {minValue: 0},
 		isStacked: false
