@@ -20,10 +20,13 @@ var doWork = function (weather, station) {
 
 // process and validade input values
 var calcProcess = function (sensor, value) {
-	if (sensor.factor && sensor.offset) {
-		value = value * sensor.factor;
+	if (sensor.offset) {
 		value = value + sensor.offset;
-	}else if (sensor.validValues) {
+	}
+	if (sensor.factor) {
+		value = value * sensor.factor;
+	}
+	if (sensor.validValues) {
 		for (var i = 0, len = sensor.validValues.length; i < len; i++) {
 			if (value === sensor.validValues[i]) {
 				return value;
@@ -35,5 +38,5 @@ var calcProcess = function (sensor, value) {
 };
 
 module.exports = {
-  doWork: doWork
+	doWork: doWork
 };
