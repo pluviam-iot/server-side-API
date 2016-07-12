@@ -20,10 +20,10 @@
 		</div>
 	</div>
 
-	<div layout="row" layout-align="space-around center">
-		<div class="align-center" ng-repeat="dimension in station.inputs" ng-if="dimension.chartType != 'none'">
-			<div class="individual-units {{dimension.name}}"></div>
-			<p class="md-caption">{{dimension.shortName}}</p>
+	<div layout="row" layout-xs="column" layout-align="space-around center">
+		<div class="align-center" layout-align="space-around center" ng-repeat="dimension in station.inputs" ng-if="dimension.chartType != 'none'">
+			<div layout-align="center center" class="individual-units {{dimension.name}}"></div>
+			<p layout-align="center center" class="md-caption">{{dimension.shortName}}</p>
 			<span class="header-now-value">{{weather[dimension.name]}}</span>
 			<span class="header-now-unit">{{dimension.unit}}</span>
 		</div>

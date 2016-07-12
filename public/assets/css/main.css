@@ -8,6 +8,14 @@ main {
 	font-weight: bold;
 	font-size: 30px;
 }
+.header-now-small .header-now-value {
+	font-size: 12px;
+}
+
+.header-now-small .header-now-unit{
+	font-size: 9px;
+}
+
 .header-now-unit{
 	font-family: Arial,Helvetica,sans-serif;
 	font-size: 14px;

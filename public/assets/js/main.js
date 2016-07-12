@@ -1,5 +1,4 @@
 'use strict';
-var isGoogleChartReady = false;
 /* Controllers */
 google.charts.load('current', {packages: ['corechart']});
 
@@ -49,9 +48,10 @@ pluviamApp.controller('aboutController', function ($scope) {
 	$scope.message = 'Nada aqui, ainda';
 });
 
-pluviamApp.controller('StationsController', ['$scope',  '$rootScope', '$http', '$routeParams', '$mdDialog', '$mdMedia',
+pluviamApp.controller('StationsController', ['$scope', '$rootScope', '$http', '$routeParams', '$mdDialog', '$mdMedia',
 function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 	console.log($routeParams);
+
 	var API_URL_BASE = '//api.pluvi.am';
 	var stationId = '';
 	var paramCountry = $routeParams.country.toLowerCase();
@@ -167,7 +167,14 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 	})
 	.error(function (data, status, headers, config) {
 		console.log('fail');
-	});
+	}
+
+	// $scope.$watch(function () {
+	//   return $mdMedia('xs') || $mdMedia('sm');
+	// }, function (responsiveClass) {
+	//   $scope.responsiveClass = 'header-now-small';
+ //  	})
+);
 
 	$scope.showPhotos = function (event) {
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
@@ -227,7 +234,7 @@ function drawChart(chart, color, title, data){
 		height: 300,
 		backgroundColor: '#FAFAFA',
 		title: title,
-		vAxis: {minValue: 0},
+		// vAxis: {minValue: 0},
 		isStacked: false
 		};
 	chart.draw(data, options);
