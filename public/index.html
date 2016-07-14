@@ -31,7 +31,16 @@
 		-->
 
 
+		<!-- External libs -->
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script>
+		google.charts.load('current', {packages: ['corechart']});
 
+		isGoogleChartReady = false;
+		google.charts.setOnLoadCallback(function () {
+			isGoogleChartReady = true;
+		});
+	</script>
 
 	<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
 
@@ -68,8 +77,7 @@
 	<meta name="theme-color" content="#2196F3">
 	<meta name="mobile-web-app-capable" content="yes">
 
-	<!-- External libs -->
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 	 <base href="/">
 
 	 <script>

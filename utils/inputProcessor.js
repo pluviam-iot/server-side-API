@@ -9,7 +9,8 @@ var doWork = function (weather, station) {
 	for (var i = 0, len = station.inputs.length; i < len; i++) {
 		var sensorKey = station.inputs[i].name;
 		var sensorValue = weather[station.inputs[i].name];
-		if (sensorValue) {
+		logger.debug('sensorValue: ' + sensorValue);
+		if (sensorValue !== undefined) {
 			var sensorValueProcessed = calcProcess(station.inputs[i], sensorValue);
 			result[sensorKey] = sensorValueProcessed;
 		}
@@ -34,7 +35,11 @@ var calcProcess = function (sensor, value) {
 		}
 		return null;
 	}
-	return value;
+	if (sensor.decimalPlaces) {
+		return value.toFixed(sensor.decimalPlaces);
+	} else {
+		return value;
+	}
 };
 
 module.exports = {

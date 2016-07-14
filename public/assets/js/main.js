@@ -1,10 +1,6 @@
 'use strict';
 /* Controllers */
-google.charts.load('current', {packages: ['corechart']});
 
-google.charts.setOnLoadCallback(function () {
-	isGoogleChartReady = true;
-});
 
 var pluviamApp = angular.module('pluviamApp', ['ngRoute', 'ngMaterial']);
 
@@ -73,11 +69,6 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 								stationId = row.id;
 
 
-
-
-
-
-
 								$http.get(API_URL_BASE + '/stations/' + stationId)
 									.success(function (results, status, headers, config) {
 										$scope.weather = results.weather[results.weather.length - 1];
@@ -109,6 +100,7 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 															}
 														});
 												}
+
 												graphsDisplay.insertAdjacentHTML('beforebegin', '<div flex id="' + dimension +
 													'"></div>');
 												var dimensionData = new google.visualization.DataTable();
