@@ -279,7 +279,7 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 										// SEO
 										$rootScope.seo = {
 											pageTitle : 'pluviam - ' + results.station.fullName,
-											canonicalUrl : '/' + results.station.location.countryCode.toLowerCase() +
+											canonicalUrl : 'http://pluvi.am/' + results.station.location.countryCode.toLowerCase() +
 											'/' + results.station.location.countyCode.toLowerCase() +
 											'/' + results.station.location.urlCity +
 											'/' + results.station.urlName,
