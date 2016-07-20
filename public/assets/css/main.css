@@ -71,3 +71,11 @@ main {
 .transparent{
 	background-color: transparent !important;
 }
+
+.social-buttons{
+	height: 21px;
+}
+
+.social-buttons div{
+	padding-right: 9px;
+}

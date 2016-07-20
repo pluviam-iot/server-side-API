@@ -1,9 +1,11 @@
+<html ng-app="pluviamApp">
 <head>
 
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>pluviam</title>
+	<title ng-bind="pageTitle">pluviam</title>
+	<link rel="canonical" ng-href="http://pluvi.am{{seo.canonicalUrl}}" />
 
 	<!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'"> -->
 	<meta name="description" content="Rede de estações meteorológicas">
@@ -33,6 +35,8 @@
 
 		<!-- External libs -->
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+
 	<script>
 		google.charts.load('current', {packages: ['corechart']});
 
@@ -91,7 +95,7 @@
 
 	</script>
 </head>
-<body  ng-app="pluviamApp"  ng-cloak>
+<body    ng-cloak>
 
 
 <div flex>
@@ -131,7 +135,7 @@
 
 		<md-toolbar>
 			<div layout="row" layout-align="center center" flex>
-				<div flex layout-align="center center">
+				<div  layout-align="center center">
 					<p class="md-caption">Pluviam | Saulo Matte Madalozzo ME | hello@pluvi.am</p>
 				</div>
 			</div>
@@ -141,3 +145,4 @@
 <script src="assets/js/main.js"></script>
 
 </body>
+</html>
