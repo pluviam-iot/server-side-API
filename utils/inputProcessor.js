@@ -36,11 +36,18 @@ var calcProcess = function (sensor, value) {
 		return null;
 	}
 	if (sensor.decimalPlaces) {
-		return value.toFixed(sensor.decimalPlaces);
+		// return customRound(value, sensor.decimalPlaces);
+		return parseFloat(value.toFixed(sensor.decimalPlaces));
 	} else {
 		return value;
 	}
 };
+
+/*
+not in use, must be tested extensively
+var customRound = function (value, places) {
+	return +(Math.round(value + 'e+' + places) + 'e-' + places);
+};*/
 
 module.exports = {
 	doWork: doWork

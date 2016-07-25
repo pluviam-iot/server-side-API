@@ -41,11 +41,11 @@ app.all('*', function (req, res, next) {
 	next();
 });
 router.get('/', function (req, res) {
-	res.json({ service: 'Pluviam API', version: 0.87, message: 'coded while the baby sleeps' });
+	res.json({ service: 'Pluviam API', version: '1.11RC2', message: 'coded while the baby sleeps!' });
 });
 
 routerBackend.get('/', function (req, res) {
-	res.json({ service: 'Pluviam Backend API', version: 0.87, message: 'coded while the baby sleeps' });
+	res.json({ service: 'Pluviam Backend API', version: '1.11RC2', message: 'coded while the baby sleeps!' });
 });
 
 router.route('/stations/')
@@ -66,6 +66,12 @@ router.route('/stations/:id')
 router.route('/stations/:id/weather')
 .get(function (req, res) {
 	pluviam.getWeather(req, res);
+});
+
+// TODO
+router.route('/stations/:id/last')
+.get(function (req, res) {
+	pluviam.getStationAndLastWeather(req, res);
 });
 
 // routes base origin

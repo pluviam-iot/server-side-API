@@ -102,6 +102,46 @@ exports.getWeather = function (stationId, callback) {
 	});
 };
 
+exports.getLastWeather = function (stationId, callback) {
+	var result = {};
+	db.collection(collectionWeather, function (err, collection) {
+		if (err) {
+			console.log('getWeather fail id ' + stationId);
+			return callback('error db.collection');
+		}
+		// 30 hours in milliseconds
+		var today = new Date();
+		var start_date = today.getFullYear() + '-' + (parseInt(today.getMonth()) + 1) + '-' + today.getDate();
+		logger.info('start_date ' + start_date);
+		collection.find({ 'stationId': new mongo.ObjectId(stationId), 'date': {'$gte': new Date(start_date)} }).sort({date: 1}).toArray(function (err, items) {
+			if (err) {
+				console.log('getWeather fail id ' + stationId);
+				return result;
+			}
+			console.log('items found');
+			result.precipitation = 0;
+			logger.error(items.length);
+			if (items.length !== 0) {
+				result.precipitation = 0;
+				items.forEach(function (item) {
+					result.precipitation += parseFloat(item.precipitation);
+				});
+				var lastItem = items.length - 1;
+				logger.error(items[lastItem].temperature);
+				result.temperature = items[lastItem].temperature;
+				result.humidity = items[lastItem].humidity;
+				result.pressure = parseFloat(items[lastItem].pressure);
+				result.brightness = items[lastItem].brightness;
+				result.windGust = items[lastItem].windGust;
+				result.windSpeed = items[lastItem].windSpeed;
+				result.windDirection = items[lastItem].windDirection;
+				result.date = items[lastItem].date;
+			}
+			return callback(null, result);
+		});
+	});
+};
+
 exports.getAllStations = function (callback) {
 	var stations = [];
 	var result = {};

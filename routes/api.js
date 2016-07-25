@@ -82,3 +82,47 @@ exports.getWeather = function (req, res) {
 		}
 	});
 };
+
+exports.getStationAndLastWeather = function (req, res) {
+	var id = req.params.id;
+	console.log('Retrieving beehive: ' + id);
+
+	var result = {};
+	var resultStation = {};
+	var returnWeather = false;
+	var returnStation = false;
+
+	database.getStation(id, function (err, station) {
+		if (err) {
+			res.send(result);
+			console.log(err.stack || err);
+		} else {
+			resultStation.name = station.fullName;
+			resultStation.country = station.location.country;
+			resultStation.county = station.location.county;
+			resultStation.city = station.location.city;
+			resultStation.url = 'http://pluvi.am/' + station.location.countryCode.toLowerCase() + '/' +
+								station.location.countyCode.toLowerCase() + '/' +
+								station.location.city.toLowerCase() + '/' +
+			station.urlName;
+			result.station = resultStation;
+			returnStation = true;
+			console.log('Success!');
+			if (returnStation && returnWeather) {
+				res.send(result);
+			}
+		}
+	});
+	database.getLastWeather(id, function (err, weather) {
+		if (err) {
+			console.log(err.stack || err);
+		} else {
+			result.weather = weather;
+			returnWeather = true;
+			console.log('Success!');
+			if (returnStation && returnWeather) {
+				res.send(result);
+			}
+		}
+	});
+};
