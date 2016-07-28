@@ -26,14 +26,20 @@ gulp.task('clean', function() {
 
 gulp.task('html', function() {
   return gulp.src('assets/html/*.html')
-    .pipe(htmlmin({collapseWhitespace: true}))
+    .pipe(htmlmin({
+		collapseWhitespace: true,
+		removeComments: true,
+		sortAttributes: true,
+		sortClassName: true
+		
+				}))
     .pipe(gulp.dest('public'))
-	.pipe(notify({ message: 'Html task complete' }));
+	// .pipe(notify({ message: 'Html task complete' }));
 });
 
 // Styles
 gulp.task('styles', function() {
-  return gulp.src('assets/styles/main.css')
+  return gulp.src('assets/styles/*.css')
     .pipe(autoprefixer('last 2 version'))
     .pipe(gulp.dest('public/assets/css/'))
     .pipe(rename({ suffix: '.min' }))
