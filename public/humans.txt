@@ -8,7 +8,7 @@
 	Site Namer: Marcelo Onhate
 
 /* SITE */
-	Last update: 2016/06
+	Last update: 2016/07
 	Standards: HTML5, CSS3
 	Components: Angular
 	Software: Atom
