@@ -88,6 +88,7 @@ exports.getStationAndLastWeather = function (req, res) {
 	console.log('Retrieving beehive: ' + id);
 
 	var result = {};
+	var processStation = {};
 	var resultStation = {};
 	var returnWeather = false;
 	var returnStation = false;
@@ -97,18 +98,19 @@ exports.getStationAndLastWeather = function (req, res) {
 			res.send(result);
 			console.log(err.stack || err);
 		} else {
+			processStation = station
 			resultStation.name = station.fullName;
 			resultStation.country = station.location.country;
 			resultStation.county = station.location.county;
 			resultStation.city = station.location.city;
 			resultStation.url = 'http://pluvi.am/' + station.location.countryCode.toLowerCase() + '/' +
 								station.location.countyCode.toLowerCase() + '/' +
-								station.location.city.toLowerCase() + '/' +
-			station.urlName;
+								station.location.city.toLowerCase() + '/' +	station.urlName;
 			result.station = resultStation;
 			returnStation = true;
 			console.log('Success!');
 			if (returnStation && returnWeather) {
+				result = joinLastWeatherAndStation(processStation, result);
 				res.send(result);
 			}
 		}
@@ -121,8 +123,17 @@ exports.getStationAndLastWeather = function (req, res) {
 			returnWeather = true;
 			console.log('Success!');
 			if (returnStation && returnWeather) {
+				result = joinLastWeatherAndStation(processStation, result);
 				res.send(result);
 			}
 		}
 	});
 };
+
+// adds units to values, ex.: mm to precipitation
+function joinLastWeatherAndStation (station, result) {
+	station.inputs.forEach(function (input) {
+		result.weather[input.name + 'Unit'] = input.unit;
+	});
+	return result;
+}
