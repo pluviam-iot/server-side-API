@@ -4,23 +4,23 @@ var winston = require('winston');
 winston.emitErrs = true;
 
 var logger = new winston.Logger({
-    transports: [
-        new winston.transports.File({
-            level: 'info',
-            filename: './logs/main.log',
-            handleExceptions: true,
-            json: false,
-            maxsize: 4196, // 5MB
-            maxFiles: 50,
-            colorize: false,
+	transports: [
+		new winston.transports.File({
+			level: 'info',
+			filename: './logs/main.log',
+			handleExceptions: true,
+			json: false,
+			maxsize: 4196, // 5MB
+			maxFiles: 50,
+			colorize: false,
 			timestamp: customTimestamp,
 			formatter: customFileFormatter
-        }),
-        new winston.transports.Console({
-            level: 'debug',
-            handleExceptions: true,
-            json: false,
-            colorize: true
+		}),
+		new winston.transports.Console({
+			level: 'debug',
+			handleExceptions: true,
+			json: false,
+			colorize: true
 		})
 	],
 	exitOnError: false

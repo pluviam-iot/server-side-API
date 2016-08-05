@@ -126,11 +126,11 @@ exports.getLastWeather = function (stationId, callback) {
 				items.forEach(function (item) {
 					result.precipitation += parseFloat(item.precipitation);
 				});
+				result.precipitation = parseFloat(result.precipitation.toFixed(1));
 				var lastItem = items.length - 1;
-				logger.error(items[lastItem].temperature);
 				result.temperature = items[lastItem].temperature;
 				result.humidity = items[lastItem].humidity;
-				result.pressure = parseFloat(items[lastItem].pressure);
+				result.pressure = items[lastItem].pressure;
 				result.brightness = items[lastItem].brightness;
 				result.windGust = items[lastItem].windGust;
 				result.windSpeed = items[lastItem].windSpeed;

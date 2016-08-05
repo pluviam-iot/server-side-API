@@ -339,7 +339,7 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 																	cumulate += dimensionValue;
 																}
 															});
-															$scope.weather[dimension] = cumulate;
+															$scope.weather[dimension] = parseFloat(cumulate.toFixed(1));
 														} else {
 															angular.forEach(results.weather, function (row, i) {
 																dimensionData.addRow([(new Date(row.date)), row[dimension]]);

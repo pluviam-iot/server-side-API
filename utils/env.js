@@ -56,7 +56,7 @@ var validProperty = function (value) {
 if (validConfs()) {
 	logger.info(util.getMicrotime() + ' - All environment variables found, continuing');
 	logger.info(util.getMicrotime() + ' - Environment set: ' + environment);
-}else {
+} else {
 	logger.error(util.getMicrotime() + ' - Environment variables not found, exiting.');
 	process.exit(1);
 }
