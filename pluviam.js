@@ -41,11 +41,11 @@ app.all('*', function (req, res, next) {
 	next();
 });
 router.get('/', function (req, res) {
-	res.json({ service: 'Pluviam API', version: '1.3RC4', message: 'coded while the baby sleeps!' });
+	res.json({ service: 'Pluviam API', version: '1.3.3RC7', message: 'coded while the baby sleeps!' });
 });
 
 routerBackend.get('/', function (req, res) {
-	res.json({ service: 'Pluviam Backend API', version: '1.3RC4', message: 'coded while the baby sleeps!' });
+	res.json({ service: 'Pluviam Backend API', version: '1.3.3RC7', message: 'coded while the baby sleeps!' });
 });
 
 router.route('/stations/')
