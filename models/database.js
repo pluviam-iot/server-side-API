@@ -47,7 +47,7 @@ exports.getStationFull = function (stationId, callback) {
 	console.log('getStationFull - id: ' + stationId);
 	db.collection(collectionStations, function (err, collection) {
 		if (err) {
-			console.log('getStationFull fail id ' + stationId);
+			console.log('getStationFull - fail id ' + stationId);
 			return callback('error getting station');
 		}
 		collection.findOne({'_id': new mongo.ObjectId(stationId)}, function (err, station) {

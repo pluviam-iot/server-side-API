@@ -5,13 +5,13 @@ var database = require('../models/database.js');
 
 exports.addWeather = function (req, res) {
 	var weather = req.body;
-	console.log('req.body ' + req.body);
 	var stationId = req.params.id;
 	var hashFromReq = req.get('X-Pluviam-Token');
 	database.addWeather(stationId, hashFromReq, weather, function (err, success) {
 		if (err) {
 			res.json({ message: 'Error' });
-			logger.error('fail addWeather' + err);
+			logger.error('fail addWeather ' + err);
+			logger.error('fail addWeather ' + req.body);
 		} else {
 			logger.info('Success addWeather!');
 			res.json({ message: 'Success' });
@@ -98,7 +98,7 @@ exports.getStationAndLastWeather = function (req, res) {
 			res.send(result);
 			console.log(err.stack || err);
 		} else {
-			processStation = station
+			processStation = station;
 			resultStation.name = station.fullName;
 			resultStation.country = station.location.country;
 			resultStation.county = station.location.county;

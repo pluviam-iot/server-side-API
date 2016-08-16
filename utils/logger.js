@@ -10,7 +10,7 @@ var logger = new winston.Logger({
 			filename: './logs/main.log',
 			handleExceptions: true,
 			json: false,
-			maxsize: 4196, // 5MB
+			maxsize: 5242880, // 5MB
 			maxFiles: 50,
 			colorize: false,
 			timestamp: customTimestamp,

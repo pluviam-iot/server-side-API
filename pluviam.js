@@ -93,12 +93,12 @@ if (envs.environment === 'development') {
 // TODO some errors doing this
 // shutdown app
 process.on('SIGTERM', function () {
-	console.log('Shutdown process - Sigterm signal, lets shutdown.');
-	pluviamServer.close(function () {
-		console.log('Shutdown process - Remaining app connections responded and closed');
-		pluviam.closeConnections(function () {
-			console.log('Shutdown process - Database connection closed');
-			console.log('Shutdown process - Success. Exiting.');
+	logger.info('Shutdown process - Sigterm signal, lets shutdown.');
+	app.close(function () {
+		logger.info('Shutdown process - Remaining app connections responded and closed');
+		app.closeConnections(function () {
+			logger.info('Shutdown process - Database connection closed');
+			logger.info('Shutdown process - Success. Exiting.');
 			process.exit(0);
 		});
 	});
