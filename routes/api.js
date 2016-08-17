@@ -10,11 +10,11 @@ exports.addWeather = function (req, res) {
 	database.addWeather(stationId, hashFromReq, weather, function (err, success) {
 		if (err) {
 			res.json({ message: 'Error' });
-			logger.error('fail addWeather ' + err);
-			logger.error('fail addWeather ' + req.body);
+			logger.error('Fail addWeather ' + err);
+			logger.error('Fail addWeather ' + req.body);
 		} else {
-			logger.info('Success addWeather!');
 			res.json({ message: 'Success' });
+			logger.info('Success addWeather!');
 		}
 	});
 };
@@ -23,16 +23,16 @@ exports.getAllStations = function (req, res) {
 	database.getAllStations(function (err, stations) {
 		if (err) {
 			res.json({ message: 'Error' });
-			console.log('fail');
+			logger.error('Fail getAllStations ' + err);
 		} else {
 			res.send(stations);
+			logger.info('Success addWeather!');
 		}
 	});
 };
 
 exports.getStationAndWeather = function (req, res) {
 	var id = req.params.id;
-	console.log('Retrieving beehive: ' + id);
 
 	var result = {};
 	var returnWeather = false;
@@ -41,51 +41,49 @@ exports.getStationAndWeather = function (req, res) {
 	database.getStation(id, function (err, station) {
 		if (err) {
 			res.send(result);
-			console.log(err.stack || err);
+			logger.error('Fail getStationAndWeather-getStation ' + err);
 		} else {
 			result.station = station;
 			returnStation = true;
-			console.log('Success!');
 			if (returnStation && returnWeather) {
 				res.send(result);
 			}
+			logger.info('Success getStationAndWeather-getStation! ');
 		}
 	});
 	database.getWeather(id, function (err, weather) {
 		if (err) {
-			// either fs.readFile or fs.writeFile returned an error
-			console.log(err.stack || err);
+			res.send(result);
+			logger.error('Fail getStationAndWeather-getWeather ' + err);
 		} else {
 			result.weather = weather;
 			returnWeather = true;
-			console.log('Success!');
 			if (returnStation && returnWeather) {
 				res.send(result);
 			}
+			logger.info('Success getStationAndWeather-getStation! ');
 		}
 	});
 };
 
 exports.getWeather = function (req, res) {
 	var id = req.params.id;
-	console.log('Retrieving beehive: ' + id);
 
 	var result = {};
 	database.getWeather(id, function (err, weather) {
 		if (err) {
-			// either fs.readFile or fs.writeFile returned an error
-			console.log(err.stack || err);
+			res.send(result);
+			logger.error('Fail getWeather ' + err);
 		} else {
 			result.weather = weather;
-			console.log('Success!');
 			res.send(result);
+			logger.info('Success getWeather! ');
 		}
 	});
 };
 
 exports.getStationAndLastWeather = function (req, res) {
 	var id = req.params.id;
-	console.log('Retrieving beehive: ' + id);
 
 	var result = {};
 	var processStation = {};
@@ -96,7 +94,7 @@ exports.getStationAndLastWeather = function (req, res) {
 	database.getStation(id, function (err, station) {
 		if (err) {
 			res.send(result);
-			console.log(err.stack || err);
+			logger.error('Fail getStationAndLastWeather-getStation ' + err);
 		} else {
 			processStation = station;
 			resultStation.name = station.fullName;
@@ -108,24 +106,25 @@ exports.getStationAndLastWeather = function (req, res) {
 								station.location.city.toLowerCase() + '/' +	station.urlName;
 			result.station = resultStation;
 			returnStation = true;
-			console.log('Success!');
 			if (returnStation && returnWeather) {
 				result = joinLastWeatherAndStation(processStation, result);
 				res.send(result);
 			}
+			logger.info('Success getStationAndLastWeather-getStation! ');
 		}
 	});
 	database.getLastWeather(id, function (err, weather) {
 		if (err) {
-			console.log(err.stack || err);
+			res.send(result);
+			logger.error('Fail getStationAndLastWeather-getLastWeather ' + err);
 		} else {
 			result.weather = weather;
 			returnWeather = true;
-			console.log('Success!');
 			if (returnStation && returnWeather) {
 				result = joinLastWeatherAndStation(processStation, result);
 				res.send(result);
 			}
+			logger.info('Success getStationAndLastWeather-getLastWeather! ');
 		}
 	});
 };
