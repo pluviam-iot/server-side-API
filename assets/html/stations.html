@@ -25,6 +25,9 @@
 			<p class="md-caption">Última atualização: <strong ng-bind="weather.date | date:'yyyy/MM/dd HH:mm'" >{{weather.date}}</strong> local</p>
 		</div>
 	</div>
+	<div layout="column" layout-padding layout-align="space-around center" ng-repeat="message in station.messages" class="md-body-2 message-{{message.type}}">
+			<div layout-padding>{{message.message}}{{message.type}}</div>
+	</div>
 
 	<div layout="row" class="header-container" layout-xs="column" layout-align="space-around center">
 		<div layout-align="space-around center" ng-repeat="dimension in station.inputs" ng-if="dimension.headerType == 'default'">

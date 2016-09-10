@@ -241,8 +241,8 @@ pluviamApp.controller('aboutController', function ($scope) {
 	$scope.message = 'Nada aqui, ainda';
 });
 
-pluviamApp.controller('StationsController', ['$scope', '$rootScope', '$http', '$routeParams', '$mdDialog', '$mdMedia',
-function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
+pluviamApp.controller('StationsController', ['$scope', '$rootScope', '$http', '$routeParams', '$mdDialog', '$mdMedia', '$interval',
+function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia, $interval) {
 	//console.log($routeParams);
 
 	var API_URL_BASE = '//api.pluvi.am';
@@ -251,8 +251,12 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 	var paramCounty = $routeParams.county.toLowerCase();
 	var paramCity = $routeParams.city.toLowerCase();
 	var paramStationName = $routeParams.stationName.toLowerCase();
-	$http.get(API_URL_BASE + '/stations/')
-		.success(function (results, status, headers, config) {
+	callAPI();
+	$interval(callAPI, 300000);
+	function callAPI () {
+		console.log('api called');
+		$http.get(API_URL_BASE + '/stations/')
+			.success(function (results, status, headers, config) {
 				angular.forEach(results.stations, function (row, i) {
 				//console.log(row);
 				if (paramCountry === row.location.countryCode.toLowerCase()) {
@@ -373,9 +377,10 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 					}
 				}
 			});
-	})
-	.error(function (data, status, headers, config) {
-		console.log('fail');
+		})
+		.error(function (data, status, headers, config) {
+			console.log('fail');
+		});
 	}
 
 	// $scope.$watch(function () {
@@ -383,7 +388,7 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia) {
 	// }, function (responsiveClass) {
 	//   $scope.responsiveClass = 'header-now-small';
  //  	})
-);
+
 
 	$scope.showPhotos = function (event) {
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;

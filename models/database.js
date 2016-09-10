@@ -103,13 +103,11 @@ exports.getLastWeather = function (stationId, callback) {
 		// 30 hours in milliseconds
 		var today = new Date();
 		var start_date = today.getFullYear() + '-' + (parseInt(today.getMonth()) + 1) + '-' + today.getDate();
-		logger.info('start_date ' + start_date);
 		collection.find({ 'stationId': new mongo.ObjectId(stationId), 'date': {'$gte': new Date(start_date)} }).sort({date: 1}).toArray(function (err, items) {
 			if (err) {
 				return callback(new Error('Error getLastWeather - collection.find'));
 			}
 			result.precipitation = 0;
-			logger.error(items.length);
 			if (items.length !== 0) {
 				result.precipitation = 0;
 				items.forEach(function (item) {

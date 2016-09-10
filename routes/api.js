@@ -94,7 +94,7 @@ exports.getStationAndLastWeather = function (req, res) {
 	database.getStation(id, function (err, station) {
 		if (err) {
 			res.send(result);
-			logger.error('Fail getStationAndLastWeather-getStation ' + err);
+			// logger.error('Fail getStationAndLastWeather-getStation ' + err);
 		} else {
 			processStation = station;
 			resultStation.name = station.fullName;
