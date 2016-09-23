@@ -222,6 +222,10 @@ function ($routeProvider, $locationProvider) {
 		templateUrl: 'about.html',
 		controller: 'aboutController'
 	})
+	.when('/pricing', {
+		templateUrl: 'pricing.html',
+		controller: 'pricingController'
+	})
 	.when('/:country/:county/:city/:stationName', {
 		templateUrl: 'stations.html',
 		controller: 'StationsController'
