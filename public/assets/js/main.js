@@ -295,6 +295,7 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia, $interva
 											var loader = document.getElementById('indeterminateLoader');
 											var graphsDisplay = document.getElementById('graphsBase');
 											// invert for each
+											var dimensionData = '';
 											angular.forEach(results.station.inputs, function (row, i) {
 												if (row.chartType !== 'none') {
 													var dimension = row.name;
@@ -313,7 +314,7 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia, $interva
 
 													graphsDisplay.insertAdjacentHTML('beforebegin', '<div flex id="' + dimension +
 														'"></div>');
-													var dimensionData = new google.visualization.DataTable();
+													dimensionData = new google.visualization.DataTable();
 													dimensionData.addColumn('datetime', 'Data/Hora');
 													dimensionData.addColumn('number', row.shortName);
 													if (plotTogether) {
@@ -362,6 +363,7 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia, $interva
 														drawChart(new google.visualization.AreaChart(document.getElementById(dimension)),
 															row.chartColors, row.shortName + ' - ' + row.unit, dimensionData, chartHeigth);
 													}
+													var dimensionData = '';
 												}
 											});
 											loader.style.display = 'none';
