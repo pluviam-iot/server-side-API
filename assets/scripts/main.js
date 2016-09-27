@@ -251,6 +251,9 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia, $interva
 	var paramCounty = $routeParams.county.toLowerCase();
 	var paramCity = $routeParams.city.toLowerCase();
 	var paramStationName = $routeParams.stationName.toLowerCase();
+	var dimensionData = [];
+	var chartList = [];
+	var firstRun = true;
 	callAPI();
 	$interval(callAPI, 300000);
 	function callAPI () {
@@ -295,7 +298,7 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia, $interva
 											var loader = document.getElementById('indeterminateLoader');
 											var graphsDisplay = document.getElementById('graphsBase');
 											// invert for each
-											var dimensionData = '';
+
 											angular.forEach(results.station.inputs, function (row, i) {
 												if (row.chartType !== 'none') {
 													var dimension = row.name;
@@ -314,17 +317,17 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia, $interva
 
 													graphsDisplay.insertAdjacentHTML('beforebegin', '<div flex id="' + dimension +
 														'"></div>');
-													dimensionData = new google.visualization.DataTable();
-													dimensionData.addColumn('datetime', 'Data/Hora');
-													dimensionData.addColumn('number', row.shortName);
+													dimensionData[dimension] = new google.visualization.DataTable();
+													dimensionData[dimension].addColumn('datetime', 'Data/Hora');
+													dimensionData[dimension].addColumn('number', row.shortName);
 													if (plotTogether) {
 														//console.log('added dimension data layer');
-														dimensionData.addColumn('number', rowPlotTogether.shortName);
+														dimensionData[dimension].addColumn('number', rowPlotTogether.shortName);
 													}
 
 													if (plotTogether) {
 														angular.forEach(results.weather, function (row, i) {
-																dimensionData.addRow([(new Date(row.date)), parseFloat(row[dimension]),
+																dimensionData[dimension].addRow([(new Date(row.date)), parseFloat(row[dimension]),
 																	row[rowPlotTogether.name]]);
 														});
 													} else {
@@ -339,7 +342,7 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia, $interva
 																dimensionDateDay = new Date(row.date).getDate();
 																//console.log(dimensionDateDay + ' - ' + lastDimensionDateDay);
 																dimensionValue = row[dimension];
-																dimensionData.addRow([(new Date(row.date)), dimensionValue]);
+																dimensionData[dimension].addRow([(new Date(row.date)), dimensionValue]);
 																if (dimensionDateDay === lastDimensionDateDay) {
 																	cumulate += dimensionValue;
 																}
@@ -347,27 +350,29 @@ function ($scope, $rootScope, $http, $routeParams, $mdDialog, $mdMedia, $interva
 															$scope.weather[dimension] = parseFloat(cumulate.toFixed(1));
 														} else {
 															angular.forEach(results.weather, function (row, i) {
-																dimensionData.addRow([(new Date(row.date)), row[dimension]]);
+																dimensionData[dimension].addRow([(new Date(row.date)), row[dimension]]);
 															});
 														}
 													}
-
-													var chartHeigth = ($mdMedia('sm') || $mdMedia('xs')) ? 250 : 400;
-													if (row.chartType === 'LineChart') {
-														drawChart(new google.visualization.LineChart(document.getElementById(dimension)),
-															row.chartColors, row.shortName + ' - ' + row.unit, dimensionData, chartHeigth);
-													} else if (row.chartType === 'ColumnChart') {
-														drawChart(new google.visualization.ColumnChart(document.getElementById(dimension)),
-															row.chartColors, row.shortName + ' - ' + row.unit, dimensionData, chartHeigth);
-													} else if (row.chartType === 'AreaChart') {
-														drawChart(new google.visualization.AreaChart(document.getElementById(dimension)),
-															row.chartColors, row.shortName + ' - ' + row.unit, dimensionData, chartHeigth);
+													if (firstRun) {
+														var chartHeigth = ($mdMedia('sm') || $mdMedia('xs')) ? 250 : 400;
+														if (row.chartType === 'LineChart') {
+															chartList[dimension] = new google.visualization.LineChart(document.getElementById(dimension));
+														} else if (row.chartType === 'ColumnChart') {
+															chartList[dimension] = new google.visualization.ColumnChart(document.getElementById(dimension));
+														} else if (row.chartType === 'AreaChart') {
+															chartList[dimension] = new google.visualization.AreaChart(document.getElementById(dimension));
+														}
+														drawChart(chartList[dimension], row.chartColors, row.shortName + ' - ' + row.unit, dimensionData[dimension], chartHeigth);
+													} else {
+														drawChart(chartList[dimension],
+															row.chartColors, row.shortName + ' - ' + row.unit, dimensionData[dimension], chartHeigth);
 													}
-													var dimensionData = '';
 												}
 											});
-											loader.style.display = 'none';
 										}
+										loader.style.display = 'none';
+										firstRun = false;
 								})
 								.error(function (data, status, headers, config) {
 								  // log error
@@ -450,6 +455,10 @@ function drawChart (chart, color, title, data, height) {
 		height: height,
 		backgroundColor: '#FAFAFA',
 		title: title,
+		animation: {
+		  duration: 1000,
+		  easing: 'in'
+	  },
 		// vAxis: {minValue: 0},
 		isStacked: false
 		};
