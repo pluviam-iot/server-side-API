@@ -240,6 +240,9 @@ function ($routeProvider, $locationProvider) {
 pluviamApp.controller('mainController', function ($scope) {
 	$scope.message = 'main!';
 });
+pluviamApp.controller('pricingController', function ($scope) {
+	$scope.message = 'main!';
+});
 
 pluviamApp.controller('aboutController', function ($scope) {
 	$scope.message = 'Nada aqui, ainda';
