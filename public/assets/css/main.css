@@ -104,6 +104,7 @@ main {
 
 .pricing-block{
 	min-width: 200px;
+	max-width: 200px;
 	min-height: 400px;
 }
 
@@ -119,7 +120,7 @@ main {
 	margin: 0 5px 0 5px
 }
 .pricing-description{
-
+	width: 185px;
 }
 .pricing-item{
 
