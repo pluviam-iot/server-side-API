@@ -3,12 +3,15 @@
 		<img src="/assets/images/pluviam_big_logo.png"/>
 		<!--<p>Quanto choveu? Qual foi a menor temperatura da madrugada?</br>
 			Qual a velocidade máxima do vento da última tempestade?</p>-->
-			<h2>pluviam</h2>
-			<p>Estações meteorológicas conectadas</p>
+			<h2>Pluviam</h2>
+			<p>Estações meteorológicas automáticas</p>
+			<!-- <p>A Pluviam oferece um serviço único: estações meteorológicas conectadas na internet, que coletam informações
+			de temperatura, umidade, pressão atmoférica, vento e chuva e transmitem em tempo real para um servidor.
+			Assim, você tem dados precisos, atualizados</p> -->
 		<!-- <p>A pluviam é uma rede de estações meteorológicas automáticas.</br>
 		Você mesmo pode montar a sua e visualizar os gráficos aqui!</p> -->
 		<br>
-
+<!--
 		<div ng-controller="mainController as ctrl" layout="column" ng-cloak>
 		  <md-content layout-padding layout="column">
 		    <form ng-submit="$event.preventDefault()">
@@ -42,7 +45,150 @@
 		    </form>
 		  </md-content>
 		</div>
+-->
+		<div class="align-center">
+			<div layout="row" class="header-container" layout-xs="column" layout-align="space-around center" >
 
+				<div layout-align="space-around center">
+					<div layout="column" layout-align="space-around center" class="home-block">
+						<md-icon md-font-set="material-icons md-48">access_time</md-icon>
+						<div class="title">Tempo real</div>
+						<div class="description">Atualizado de minuto em minuto</div>
+					</div>
+				</div>
+				<div layout-align="space-around center">
+					<div layout="column" layout-align="space-around center" class="home-block">
+						<md-icon md-font-set="material-icons md-48">trending_up</md-icon>
+						<div class="title">Gráficos</div>
+						<div class="description">Informações de uma maneira fácil de visualizar</div>
+					</div>
+				</div>
+				<div layout-align="space-around center">
+					<div layout="column" layout-align="space-around center" class="home-block">
+						<md-icon md-font-set="material-icons md-48">replay</md-icon>
+						<div class="title">Histórico</div>
+						<div class="description">Os dados são salvos desde o começo</div>
+					</div>
+				</div>
 
+			</div>
+		</div>
+		<div layout="row" class="header-container" layout-xs="column" layout-align="space-around center" >
+			<div class="align-center">
+				<h2>Como funciona?</h2>
+			</div>
+		</div>
+		<div layout="row" class="header-container" layout-xs="column" layout-align="space-around center" >
+			<div layout-align="space-around center">
+				<div layout="column" layout-align="space-around center" class="home-block">
+					<md-icon md-font-set="material-icons md-48">cloud</md-icon>
+					<div class="description">A estação coleta os dados e envia para a Pluviam a cada minuto</div>
+				</div>
+			</div>
+			<div layout-align="space-around center">
+				<div layout="column" layout-align="space-around center" class="home-block">
+					<md-icon md-font-set="material-icons md-48">cloud_done</md-icon>
+					<div class="description">A Pluviam processa e disponibiliza em tempo real</div>
+				</div>
+			</div>
+			<div layout-align="space-around center">
+				<div layout="column" layout-align="space-around center" class="home-block">
+					<md-icon md-font-set="material-icons md-48">share</md-icon>
+					<div class="description">Exiba as informações atualizadas no seu site ou visualize na página da estação na Pluviam</div>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+</div>
+
+<div layout="row" layout-align="space-around center">
+	<div class="align-center">
+		<div layout="column" layout-padding layout-align="space-around center" class="md-body-2">
+			<h1>Preços</h1>
+			<span>Confira abaixo os tipos de estação disponíveis e as características de cada uma:</span>
+		</div>
+
+		<div layout="row" class="header-container" layout-xs="column" layout-align="space-around center" >
+
+			<div layout-align="space-around center" md-whiteframe="4" class="pricing-block-outter">
+				<div layout="column" layout-align="space-around center" class="pricing-block">
+					<div class="pricing-title">Simples</div>
+					<div layout="column"  layout-align="space-around center">
+						<span class="pricing-price">R$ 404</span>
+						<span class="pricing-item">na compra</span>
+						<span class="pricing-item">+</span>
+						<span class="pricing-price">R$ 23</span>
+						<span class="pricing-item">por mês</span>
+					</div>
+					<div layout="column"  layout-align="space-around center" style="height: 40px;">
+						<span class="pricing-item">Temperatura</span>
+					</div>
+				</div>
+			</div>
+			<div layout-align="space-around center" md-whiteframe="4" class="pricing-block-outter">
+				<div layout="column" layout-align="space-around center" class="pricing-block">
+					<div class="pricing-title">Simples +</div>
+					<div layout="column"  layout-align="space-around center">
+						<span class="pricing-price">R$ 558</span>
+						<span class="pricing-item">na compra</span>
+						<span class="pricing-item">+</span>
+						<span class="pricing-price">R$ 23</span>
+						<span class="pricing-item">por mês</span>
+					</div>
+					<div layout="column"  layout-align="space-around center" style="height: 40px;">
+						<span class="pricing-item">Temperatura</span>
+						<span class="pricing-item">Umidade</span>
+					</div>
+				</div>
+			</div>
+			<div layout-align="space-around center" md-whiteframe="4" class="pricing-block-outter">
+				<div layout="column" layout-align="space-around center" class="pricing-block">
+					<div class="pricing-title">Média</div>
+					<div layout="column"  layout-align="space-around center">
+						<span class="pricing-price">R$ 644</span>
+						<span class="pricing-item">na compra</span>
+						<span class="pricing-item">+</span>
+						<span class="pricing-price">R$ 26</span>
+						<span class="pricing-item">por mês</span>
+					</div>
+					<div layout="column"  layout-align="space-around center" style="height: 40px;">
+						<span class="pricing-item">Temperatura</span>
+						<span class="pricing-item">Umidade</span>
+						<span class="pricing-item">Pressão</span>
+					</div>
+				</div>
+			</div>
+			<div layout-align="space-around center" md-whiteframe="4" class="pricing-block-outter">
+				<div layout="column" layout-align="space-around center" class="pricing-block">
+					<div class="pricing-title">Avançada</div>
+					<div layout="column"  layout-align="space-around center">
+						<span class="pricing-price">R$ 1.714</span>
+						<span class="pricing-item">na compra</span>
+						<span class="pricing-item">+</span>
+						<span class="pricing-price">R$ 29</span>
+						<span class="pricing-item">por mês</span>
+					</div>
+					<div layout="column"  layout-align="space-around center" style="height: 40px;">
+						<span class="pricing-item">Temperatura</span>
+						<span class="pricing-item">Umidade</span>
+						<span class="pricing-item">Pressão</span>
+						<span class="pricing-item">Chuva</span>
+						<span class="pricing-item">Vento</span>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div layout="column" layout-padding layout-align="space-around center" class="md-body-2">
+			<p>
+				Frete Grátis para todo o Brasil.
+			</br>*1 - Os preços não incluem servico de instalação.
+			</br>*2 - A mensalidade é referente a manutenção e provimento dos dados
+			</br>*3 - Manutenção de rotina não inclusa na mensalidade.
+			</p>
+		</div>
 	</div>
 </div>

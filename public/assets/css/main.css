@@ -102,10 +102,23 @@ main {
 	padding-right: 9px;
 }
 
+.pricing-block-outter{
+	margin: 20px;
+}
+
+.pricing-block-outter-selected{
+	padding: 15px;
+}
+
 .pricing-block{
 	min-width: 200px;
 	max-width: 200px;
 	min-height: 400px;
+}
+
+.home-block{
+	min-width: 200px;
+	max-width: 200px;
 }
 
 .pricing-title{
@@ -124,6 +137,21 @@ main {
 }
 .pricing-item{
 
+}
+
+.home-block .description{
+	width: 215px;
+	margin: 30px;
+}
+
+.home-block .title{
+	font-weight: bold;
+}
+
+.material-icons.md-48 {
+	font-size: 48px;
+	width: 48px;
+	height: 58px;
 }
 
 
