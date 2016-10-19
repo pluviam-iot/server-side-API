@@ -101,3 +101,75 @@ main {
 .social-buttons div{
 	padding-right: 9px;
 }
+
+.pricing-block-outter{
+	margin: 20px;
+}
+
+.pricing-block-outter-selected{
+	padding: 15px;
+}
+
+.pricing-block{
+	min-width: 200px;
+	max-width: 200px;
+	min-height: 400px;
+}
+
+.home-block{
+	min-width: 200px;
+	max-width: 200px;
+}
+
+.pricing-title{
+	margin-top: 15px;
+    margin-bottom: 1px;
+}
+.pricing-price{
+	font-family: Arial,Helvetica,sans-serif;
+	color: #333333;
+	font-weight: bold;
+	font-size: 26px;
+	margin: 0 5px 0 5px
+}
+.pricing-description{
+	width: 185px;
+}
+.pricing-item{
+
+}
+
+.home-block .description{
+	width: 215px;
+	margin: 30px;
+}
+
+.home-block .title{
+	font-weight: bold;
+}
+
+.material-icons.md-48 {
+	font-size: 48px;
+	width: 48px;
+	height: 58px;
+}
+
+
+.autocompletedemoCustomTemplate .autocomplete-custom-template li {
+  border-bottom: 1px solid #ccc;
+  height: auto;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  white-space: normal; }
+
+.autocompletedemoCustomTemplate .autocomplete-custom-template li:last-child {
+  border-bottom-width: 0; }
+
+.autocompletedemoCustomTemplate .autocomplete-custom-template .item-title,
+.autocompletedemoCustomTemplate .autocomplete-custom-template .item-metadata {
+  display: block;
+  line-height: 2; }
+
+.autocompletedemoCustomTemplate .autocomplete-custom-template .item-title md-icon {
+  height: 18px;
+  width: 18px; }
