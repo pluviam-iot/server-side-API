@@ -2,6 +2,7 @@
 
 var logger = require('../utils/logger.js');
 var database = require('../models/database.js');
+var telegramBot = require('../utils/telegramBot.js');
 
 exports.addWeather = function (req, res) {
 	var weather = req.body;
@@ -91,10 +92,13 @@ exports.getStationAndLastWeather = function (req, res) {
 	var returnWeather = false;
 	var returnStation = false;
 
+	var origin = req.get('origin');
+	telegramBot.sendMessage('New request from origin: ' + origin);
+
 	database.getStation(id, function (err, station) {
 		if (err) {
 			res.send(result);
-			// logger.error('Fail getStationAndLastWeather-getStation ' + err);
+			logger.error('Fail getStationAndLastWeather-getStation ' + err);
 		} else {
 			processStation = station;
 			resultStation.name = station.fullName;

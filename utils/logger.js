@@ -1,6 +1,7 @@
 
 // { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
 var winston = require('winston');
+var telegramBot = require('../utils/telegramBot.js');
 winston.emitErrs = true;
 
 var logger = new winston.Logger({
@@ -70,6 +71,7 @@ module.exports = {
 	*/
 	error: function (message) {
 		logger.log('error', message);
+		telegramBot.sendMessage('Error: ' + message);
 	}
 };
 // logger.log('silly', "127.0.0.1 - there's no place like home");
