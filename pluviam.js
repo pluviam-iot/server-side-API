@@ -16,6 +16,8 @@ var morgan = require('morgan');
 var pluviam = require('./routes/api.js');
 var config = require('config');
 
+var CronJob = require('cron').CronJob;
+
 var app = express();
 logger.debug(util.getMicrotime() + ' - Overriding Express logger');
 
@@ -44,6 +46,11 @@ app.all('*', function (req, res, next) {
 	res.header('Access-Control-Allow-Headers', 'Content-Type');
 	next();
 });
+
+var counterApi = 0;
+var counterBackend = 0;
+var counterAddWeather = 0;
+
 router.get('/', function (req, res) {
 	res.json({ service: 'Pluviam API', version: pluviamVersion, message: 'coded while the baby sleeps!' });
 });
@@ -60,6 +67,7 @@ router.route('/stations/')
 routerBackend.route('/stations/:id')
 .post(function (req, res) {
 	pluviam.addWeather(req, res);
+	counterAddWeather++;
 });
 
 router.route('/stations/:id')
@@ -108,8 +116,19 @@ process.on('SIGTERM', function () {
 	});
 });
 
+logger.info(util.getMicrotime() + ' - Starting schedulers');
+new CronJob('00 00 * * * *', function () {
+  telegramBot.sendMessage('Pluviam Stats addWeather: ' + counterAddWeather);
+  counterAddWeather = 0;
+}, null, true, 'America/Los_Angeles');
+
+
 logger.info(util.getMicrotime() + ' - Pluviam app started');
 telegramBot.sendMessage('Pluviam app ' + pluviamVersion + ' started.');
+
+
+
+
 
 /* get api.pluvi.am/r/stations/
 post api.pluvi.am/r/weather/

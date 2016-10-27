@@ -1,6 +1,7 @@
 {
   "name": "pluviam",
   "version": "0.9.0",
+  "private": true,
   "description": "pluviam",
   "main": "pluviam.js",
   "scripts": {
