@@ -1,10 +1,14 @@
 'use strict';
 
+var pluviamVersion = '1.5';
+
 var logger = require('./utils/logger.js');
 logger.info('Starting pluviam app...');
 var envs = require('./utils/env.js');
 
 var util = require('./utils/util.js');
+
+var telegramBot = require('./utils/telegramBot.js');
 
 var express = require('express');
 var morgan = require('morgan');
@@ -41,11 +45,11 @@ app.all('*', function (req, res, next) {
 	next();
 });
 router.get('/', function (req, res) {
-	res.json({ service: 'Pluviam API', version: '1.4.3', message: 'coded while the baby sleeps!' });
+	res.json({ service: 'Pluviam API', version: pluviamVersion, message: 'coded while the baby sleeps!' });
 });
 
 routerBackend.get('/', function (req, res) {
-	res.json({ service: 'Pluviam Backend API', version: '1.4.3', message: 'coded while the baby sleeps!' });
+	res.json({ service: 'Pluviam Backend API', version: pluviamVersion, message: 'coded while the baby sleeps!' });
 });
 
 router.route('/stations/')
@@ -105,6 +109,7 @@ process.on('SIGTERM', function () {
 });
 
 logger.info(util.getMicrotime() + ' - Pluviam app started');
+telegramBot.sendMessage('Pluviam app ' + pluviamVersion + ' started.');
 
 /* get api.pluvi.am/r/stations/
 post api.pluvi.am/r/weather/
