@@ -41,6 +41,13 @@
 	</div>
 
 	<div layout="row" id="indeterminateLoader" layout-sm="column" layout-align="space-around">
+
 	<md-progress-circular md-mode="indeterminate"></md-progress-circular>
 	</div>
+	<div layout="row" layout-align="space-around" hide show-gt-sm><img ng-src="{{station.media.banner.top.big}}"/></div>
+	<div layout="row" layout-align="space-around" hide show-sm><img ng-src="{{station.media.banner.top.medium}}"/></div>
+	<div layout="row" layout-align="space-around" hide show-xs><img show-xs ng-src="{{station.media.banner.top.small}}"/></div>
 	<div style="display:none" id="graphsBase"></div>
+	<div layout="row" layout-align="space-around" hide show-gt-sm><img ng-src="{{station.media.banner.bottom.big}}"/></div>
+	<div layout="row" layout-align="space-around" hide show-sm><img ng-src="{{station.media.banner.bottom.medium}}"/></div>
+	<div layout="row" layout-align="space-around" hide show-xs><img show-xs ng-src="{{station.media.banner.bottom.small}}"/></div>

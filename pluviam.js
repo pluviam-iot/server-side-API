@@ -118,8 +118,8 @@ process.on('SIGTERM', function () {
 
 logger.info(util.getMicrotime() + ' - Starting schedulers');
 new CronJob('00 00 * * * *', function () {
-  telegramBot.sendMessage('Pluviam Stats addWeather: ' + counterAddWeather);
-  counterAddWeather = 0;
+	telegramBot.sendMessage('Pluviam Stats addWeather: ' + counterAddWeather);
+	counterAddWeather = 0;
 }, null, true, 'America/Los_Angeles');
 
 
