@@ -16,7 +16,7 @@ var morgan = require('morgan');
 var pluviam = require('./routes/api.js');
 var config = require('config');
 
-var CronJob = require('cron').CronJob;
+var cronJob = require('cron').CronJob;
 
 var app = express();
 logger.debug(util.getMicrotime() + ' - Overriding Express logger');
@@ -117,7 +117,7 @@ process.on('SIGTERM', function () {
 });
 
 logger.info(util.getMicrotime() + ' - Starting schedulers');
-new CronJob('00 00 * * * *', function () {
+new cronJob('00 00 * * * *', function () {
 	telegramBot.sendMessage('Pluviam Stats addWeather: ' + counterAddWeather);
 	counterAddWeather = 0;
 }, null, true, 'America/Los_Angeles');
