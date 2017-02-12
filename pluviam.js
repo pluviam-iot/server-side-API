@@ -1,12 +1,13 @@
 'use strict';
 
-var pluviamVersion = '1.5';
+var pluviamVersion = '1.5.5';
 
 var logger = require('./utils/logger.js');
 logger.info('Starting pluviam app...');
 var envs = require('./utils/env.js');
 
 var util = require('./utils/util.js');
+var stats = require('./utils/stats.js');
 
 var telegramBot = require('./utils/telegramBot.js');
 
@@ -47,43 +48,44 @@ app.all('*', function (req, res, next) {
 	next();
 });
 
-var counterApi = 0;
-var counterBackend = 0;
-var counterAddWeather = 0;
-
 router.get('/', function (req, res) {
 	res.json({ service: 'Pluviam API', version: pluviamVersion, message: 'coded while the baby sleeps!' });
+	stats.apiCalls.backendAPIRoot++;
 });
 
 routerBackend.get('/', function (req, res) {
 	res.json({ service: 'Pluviam Backend API', version: pluviamVersion, message: 'coded while the baby sleeps!' });
+	stats.apiCalls.frontEndAPIRoot++;
 });
 
 router.route('/stations/')
 .get(function (req, res) {
 	pluviam.getAllStations(req, res);
+	stats.apiCalls.frontEndAllStations++;
 });
 
 routerBackend.route('/stations/:id')
 .post(function (req, res) {
 	pluviam.addWeather(req, res);
-	counterAddWeather++;
+	stats.apiCalls.backEndStationAddWeather++;
 });
 
 router.route('/stations/:id')
 .get(function (req, res) {
 	pluviam.getStationAndWeather(req, res);
+	stats.apiCalls.frontEndStationAndWeather++;
 });
 
 router.route('/stations/:id/weather')
 .get(function (req, res) {
 	pluviam.getWeather(req, res);
+	stats.apiCalls.frontEndWeather++;
 });
 
-// TODO
 router.route('/stations/:id/last')
 .get(function (req, res) {
 	pluviam.getStationAndLastWeather(req, res);
+	stats.apiCalls.frontEndStationAndWeatherLast++;
 });
 
 // routes base origin
@@ -118,17 +120,18 @@ process.on('SIGTERM', function () {
 
 logger.info(util.getMicrotime() + ' - Starting schedulers');
 new cronJob('00 00 * * * *', function () {
-	telegramBot.sendMessage('Pluviam Stats addWeather: ' + counterAddWeather);
-	counterAddWeather = 0;
+	telegramBot.sendMessage('<b>Pluviam Stats</b>' +
+							'Environment: ' + envs.environment +
+							//TODO here
+	stats.apiCalls.);
+	stats.apiCallsReset();
 }, null, true, 'America/Los_Angeles');
 
-
 logger.info(util.getMicrotime() + ' - Pluviam app started');
-telegramBot.sendMessage('Pluviam app ' + pluviamVersion + ' started.');
-
-
-
-
+telegramBot.sendMessage('Pluviam app <b>v' + pluviamVersion + '</b> started \n' +
+						'Environment: <b>' + envs.environment +
+						'</b>\nPackages:' +
+						JSON.stringify(process.versions));
 
 /* get api.pluvi.am/r/stations/
 post api.pluvi.am/r/weather/
