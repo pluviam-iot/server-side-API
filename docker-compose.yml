@@ -1,0 +1,33 @@
+version: '2'
+services:
+  pluviam:
+    image: node:latest
+    container_name: "pluviam"
+    environment:
+      - DATABASE_SERVER=mongodb
+      - DATABASE_PORT=27017
+      - DATABASE_USER=pluviam
+      - DATABASE_PASSWORD=connect123
+      - NODE_ENV=development
+      - DATABASE_NAME=pluviam
+    volumes:
+      - .:/usr/src/pluviam:rw
+    ports:
+      - 8181:1337
+      - 8182:80
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+    command: bash -c "cd /usr/src/pluviam && npm i && npm install -g nodemon && nodemon pluviam.js"
+  mongodb:
+      image: mongo:latest
+      container_name: "mongodb"
+      environment:
+        - MONGO_DATA_DIR=/data/db
+        - MONGO_LOG_DIR=/dev/null
+      volumes:
+        - ./data/db:/data/db
+      ports:
+          - 27017:27017
+      command: mongod --smallfiles --logpath=/dev/null
