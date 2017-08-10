@@ -181,7 +181,7 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 					if (typeof weather.date === 'undefined' || weather.date === null) {
 						processedWeather.date = new Date();
 					} else {
-						processedWeather.date = weather.date;
+						processedWeather.date = new Date(weather.date);
 					}
 					db.collection(collectionWeather, function (err, collection) {
 						if (err) {
