@@ -2,7 +2,7 @@
 
 var logger = require('../utils/logger.js');
 var database = require('../models/database.js');
-var telegramBot = require('../utils/telegramBot.js');
+var slackBot = require('../utils/slackBot.js');
 
 exports.addWeather = function (req, res) {
 	var weather = req.body;
@@ -93,7 +93,7 @@ exports.getStationAndLastWeather = function (req, res) {
 	var returnStation = false;
 
 	var origin = req.get('origin');
-	telegramBot.sendMessage('New request from origin: ' + origin);
+	slackBot.sendMessage('New request from origin: ' + origin);
 
 	database.getStation(id, function (err, station) {
 		if (err) {

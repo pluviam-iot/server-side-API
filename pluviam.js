@@ -9,7 +9,7 @@ var envs = require('./utils/env.js');
 var util = require('./utils/util.js');
 var stats = require('./utils/stats.js');
 
-var telegramBot = require('./utils/telegramBot.js');
+var slackBot = require('./utils/slackBot.js');
 
 var express = require('express');
 var morgan = require('morgan');
@@ -120,15 +120,15 @@ process.on('SIGTERM', function () {
 
 logger.info(util.getMicrotime() + ' - Starting schedulers');
 new cronJob('00 00 * * * *', function () {
-	telegramBot.sendMessage('<b>Pluviam Stats</b>' +
-							'Environment: ' + envs.environment +
+	slackBot.sendMessage('<b>Pluviam Stats</b>' +
+							'Environment: ' + envs.environment
 							//TODO here
-	stats.apiCalls.);
+	);
 	stats.apiCallsReset();
 }, null, true, 'America/Los_Angeles');
 
 logger.info(util.getMicrotime() + ' - Pluviam app started');
-telegramBot.sendMessage('Pluviam app <b>v' + pluviamVersion + '</b> started \n' +
+slackBot.sendMessage('Pluviam app <b>v' + pluviamVersion + '</b> started \n' +
 						'Environment: <b>' + envs.environment +
 						'</b>\nPackages:' +
 						JSON.stringify(process.versions));
