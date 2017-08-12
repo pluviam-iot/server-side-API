@@ -16,7 +16,7 @@ var inputProcessor = require('../utils/inputProcessor.js');
 
 var MongoClient = require('mongodb').MongoClient;
 var db;
-var databaseURL = 'mongodb://' + envs.database.user + ':' + envs.database.password + '@' + envs.database.server + ':' + envs.database.port + '/' + envs.database.name;
+var databaseURL = envs.database.server;
 MongoClient.connect(databaseURL, function (err, connection) {
 	assert.equal(null, err);
 	logger.info(util.getMicrotime() + ' - Connected to DB server.');

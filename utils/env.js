@@ -4,11 +4,7 @@ var logger = require('../utils/logger.js');
 var util = require('../utils/util.js');
 
 var database = {};
-database.server = process.env.DATABASE_SERVER;
-database.port = process.env.DATABASE_PORT;
-database.user = process.env.DATABASE_USER;
-database.password = process.env.DATABASE_PASSWORD;
-database.name = process.env.DATABASE_NAME;
+database.server = process.env.DATABASE_URL;
 
 var environment = process.env.NODE_ENV;
 
@@ -24,23 +20,7 @@ var validConfs = function () {
 		result = false;
 	}
 	if (!validProperty(database.server)) {
-		logger.error('Env DATABASE_SERVER not found');
-		result = false;
-	}
-	if (!validProperty(database.port)) {
-		logger.error('Env DATABASE_PORT not found');
-		result = false;
-	}
-	if (!validProperty(database.user)) {
-		logger.error('Env DATABASE_USER not found');
-		result = false;
-	}
-	if (!validProperty(database.password)) {
-		logger.error('Env DATABASE_PASSWORD not found');
-		result = false;
-	}
-	if (!validProperty(database.name)) {
-		logger.error('Env DATABASE_NAME not found');
+		logger.error('Env DATABASE_URL not found');
 		result = false;
 	}
 	return result;
