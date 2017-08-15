@@ -17,7 +17,7 @@ var morgan = require('morgan');
 var pluviam = require('./routes/api.js');
 var config = require('config');
 
-var cronJob = require('cron').CronJob;
+var CronJob = require('cron').CronJob;
 
 var app = express();
 logger.debug(util.getMicrotime() + ' - Overriding Express logger');
@@ -50,12 +50,12 @@ app.all('*', function (req, res, next) {
 
 router.get('/', function (req, res) {
 	res.json({ service: 'Pluviam API', version: pluviamVersion, message: 'coded while the baby sleeps!' });
-	stats.apiCalls.backendAPIRoot++;
+	stats.apiCalls.frontEndAPIRoot++;
 });
 
 routerBackend.get('/', function (req, res) {
 	res.json({ service: 'Pluviam Backend API', version: pluviamVersion, message: 'coded while the baby sleeps!' });
-	stats.apiCalls.frontEndAPIRoot++;
+	stats.apiCalls.backendAPIRoot++;
 });
 
 router.route('/stations/')
@@ -119,18 +119,23 @@ process.on('SIGTERM', function () {
 });
 
 logger.info(util.getMicrotime() + ' - Starting schedulers');
-new cronJob('00 00 * * * *', function () {
-	slackBot.sendMessage('<b>Pluviam Stats</b>' +
-							'Environment: ' + envs.environment
-							//TODO here
+new CronJob('00 00 * * * *', function () {
+	slackBot.sendMessage('Pluviam Stats ' + envs.environment +
+		'\nbackendAPIRoot ' + stats.apiCalls.backendAPIRoot +
+		'\nbackEndStationAddWeather ' + stats.apiCalls.backEndStationAddWeather +
+		'\nfrontEndAPIRoot ' + stats.apiCalls.frontEndAPIRoot +
+		'\nfrontEndAllStations ' + stats.apiCalls.frontEndAllStations +
+		'\frontEndStationAndWeather ' + stats.apiCalls.frontEndStationAndWeather +
+		'\nfrontEndWeather ' + stats.apiCalls.frontEndWeather +
+		'\nfrontEndStationAndWeatherLast ' + stats.apiCalls.frontEndStationAndWeatherLast
 	);
 	stats.apiCallsReset();
 }, null, true, 'America/Los_Angeles');
 
 logger.info(util.getMicrotime() + ' - Pluviam app started');
-slackBot.sendMessage('Pluviam app <b>v' + pluviamVersion + '</b> started \n' +
-						'Environment: <b>' + envs.environment +
-						'</b>\nPackages:' +
+slackBot.sendMessage('Pluviam app v' + pluviamVersion + ' started \n' +
+						'Environment:' + envs.environment +
+						'\nPackages:' +
 						JSON.stringify(process.versions));
 
 /* get api.pluvi.am/r/stations/
