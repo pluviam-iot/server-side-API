@@ -20,6 +20,22 @@ exports.addWeather = function (req, res) {
 	});
 };
 
+exports.addBulkWeather = function (req, res) {
+	var weather = req.body;
+	var stationId = req.params.id;
+	var hashFromReq = req.get('X-Pluviam-Token');
+	database.addBulkWeather(stationId, hashFromReq, weather, function (err, success) {
+		if (err) {
+			res.json({ message: 'Error' });
+			logger.error('Fail addWeather ' + err);
+			logger.error('Fail addWeather ' + req.body);
+		} else {
+			res.json({ message: 'Success' });
+			logger.info('Success addWeather!');
+		}
+	});
+};
+
 exports.getAllStations = function (req, res) {
 	database.getAllStations(function (err, stations) {
 		if (err) {

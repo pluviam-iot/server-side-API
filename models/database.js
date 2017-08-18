@@ -204,6 +204,56 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 	});
 };
 
+exports.addBulkWeather = function (stationId, hashFromReq, weather, callback) {
+	db.collection(collectionStations, function (err, collection) {
+		if (err) {
+			return callback(new Error('Error addWeather - db.collection(collectionStations)'));
+		}
+		collection.findOne({'_id': new mongo.ObjectId(stationId)}, function (err, station) {
+			if (err) {
+				return callback(new Error('Error addWeather - collection.findOne'));
+			} else {
+				if (util.isNotEmpty(station)) {
+					if (!station.internal.token || !station.internal.salt || !hashFromReq) {
+						return callback(new Error('Error addWeather - empty identify strings'));
+					}
+					if (!util.isValidToken(station.internal.token, station.internal.salt, hashFromReq)) {
+						return callback(new Error('Error addWeather - invalid password'));
+					}
+
+					// TODO WIP
+					var processedWeather = inputProcessor.doWork(weather, station);
+					processedWeather.stationId = station._id;
+					if (typeof weather.date === 'undefined' || weather.date === null) {
+						return callback(new Error('Error addWeather - invalid date'));
+					} else {
+						processedWeather.date = new Date(weather.date);
+					}
+					db.collection(collectionWeather, function (err, collection) {
+						if (err) {
+							return callback(new Error('Error addWeather - db.collection(collectionWeather)'));
+						}
+						collection.insert(processedWeather, {safe: true}, function (err, result) {
+							if (err) {
+								return callback(new Error('Error addWeather - collection.insert'));
+							} else {
+								logger.info('Adding weather: ' + JSON.stringify(processedWeather));
+								return callback(null, 'Success collection.insert');
+							}
+						});
+					});
+					// TODO END
+
+
+
+				} else {
+					return callback(new Error('Error addWeather - item empty'));
+				}
+			}
+		});
+	});
+};
+
 exports.getStation = function (stationId, callback) {
 	this.getStationFull(stationId, function (err, station) {
 		if (err) {
