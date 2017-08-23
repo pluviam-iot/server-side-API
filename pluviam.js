@@ -1,6 +1,6 @@
 'use strict';
 
-var pluviamVersion = '1.6.0';
+var pluviamVersion = '1.7.0';
 
 var logger = require('./utils/logger.js');
 logger.info('Starting pluviam app...');
