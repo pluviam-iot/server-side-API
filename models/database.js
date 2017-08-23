@@ -204,6 +204,64 @@ exports.addWeather = function (stationId, hashFromReq, weather, callback) {
 	});
 };
 
+exports.addBulkWeather = function (stationId, hashFromReq, body, callback) {
+	db.collection(collectionStations, function (err, collection) {
+		if (err) {
+			return callback(new Error('Error addWeather - db.collection(collectionStations)'));
+		}
+		collection.findOne({'_id': new mongo.ObjectId(stationId)}, function (err, station) {
+			if (err) {
+				return callback(new Error('Error addWeather - collection.findOne'));
+			} else {
+				if (util.isNotEmpty(station)) {
+					if (!station.internal.token || !station.internal.salt || !hashFromReq) {
+						return callback(new Error('Error addWeather - empty identify strings'));
+					}
+					if (!util.isValidToken(station.internal.token, station.internal.salt, hashFromReq)) {
+						return callback(new Error('Error addWeather - invalid password'));
+					}
+					var headersArray = body.headers.split(';');
+					var weatherArray = body.data;
+
+					logger.info(headersArray);
+
+					var finalWeather = [];
+					for (var i in weatherArray) {
+						var rawWeatherSingle = weatherArray[i].split(';');
+						var rawWeatherSingleObj = {};
+						for (var j = 0; j < headersArray.length; j++) {
+							// +1 becase first is always date
+							rawWeatherSingleObj[headersArray[j]] = rawWeatherSingle[j + 1];
+						}
+						var rawWeatherSingleProcessed = inputProcessor.doWork(rawWeatherSingleObj, station);
+
+						// array[0] is alway date
+						rawWeatherSingleProcessed.date = new Date(rawWeatherSingle[0]);
+						rawWeatherSingleProcessed.stationId = station._id;
+						console.log(rawWeatherSingleProcessed);
+						finalWeather.push(rawWeatherSingleProcessed);
+					}
+					db.collection(collectionWeather, function (err, collection) {
+						if (err) {
+							return callback(new Error('Error addWeather - db.collection(collectionWeather)'));
+						}
+						collection.insertMany(finalWeather, {safe: true}, function (err, result) {
+							if (err) {
+								return callback(new Error('Error addWeather - collection.insert'));
+							} else {
+								logger.info('Adding weather: ' + JSON.stringify(finalWeather));
+								return callback(null, 'Success collection.insert');
+							}
+						});
+					});
+				} else {
+					return callback(new Error('Error addWeather - item empty'));
+				}
+			}
+		});
+	});
+};
+
 exports.getStation = function (stationId, callback) {
 	this.getStationFull(stationId, function (err, station) {
 		if (err) {

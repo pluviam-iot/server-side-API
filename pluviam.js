@@ -70,6 +70,12 @@ routerBackend.route('/stations/:id')
 	stats.apiCalls.backEndStationAddWeather++;
 });
 
+routerBackend.route('/stations/:id/bulk')
+.post(function (req, res) {
+	pluviam.addBulkWeather(req, res);
+	stats.apiCalls.backEndBulkStationAddWeather++;
+});
+
 router.route('/stations/:id')
 .get(function (req, res) {
 	pluviam.getStationAndWeather(req, res);
@@ -120,15 +126,7 @@ process.on('SIGTERM', function () {
 
 logger.info(util.getMicrotime() + ' - Starting schedulers');
 new CronJob('00 00 * * * *', function () {
-	slackBot.sendMessage('Pluviam Stats ' + envs.environment +
-		'\nbackendAPIRoot ' + stats.apiCalls.backendAPIRoot +
-		'\nbackEndStationAddWeather ' + stats.apiCalls.backEndStationAddWeather +
-		'\nfrontEndAPIRoot ' + stats.apiCalls.frontEndAPIRoot +
-		'\nfrontEndAllStations ' + stats.apiCalls.frontEndAllStations +
-		'\frontEndStationAndWeather ' + stats.apiCalls.frontEndStationAndWeather +
-		'\nfrontEndWeather ' + stats.apiCalls.frontEndWeather +
-		'\nfrontEndStationAndWeatherLast ' + stats.apiCalls.frontEndStationAndWeatherLast
-	);
+	slackBot.sendMessage('Pluviam Stats ' + envs.environment + stats.buildStats());
 	stats.apiCallsReset();
 }, null, true, 'America/Los_Angeles');
 
