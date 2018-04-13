@@ -48,6 +48,30 @@ exports.getAllStations = function (req, res) {
 	});
 };
 
+var addMessagesToStation = function(result) {
+	result.station.messages = result.station.messages || [];
+
+	if (!result.weather.length) {
+		result.station.messages.push({
+			message: 'Atenção: Não houve atualização dos dados nas últimas 30 horas.',
+			type: 'error'
+		});
+	} else {
+		const lastWeather = result.weather[result.weather.length - 1];
+		const timeDifferenceMs = Date.now() - lastWeather.date.getTime();
+		const timeDifferenceMinutes = timeDifferenceMs / 1000.0 / 60;
+
+		if (timeDifferenceMinutes > 15) {
+			result.station.messages.push({
+				message: 'Atenção: Não houve atualização dos dados recentemente.',
+				type: 'warning'
+			});
+		}
+	}
+
+	return result;
+};
+
 exports.getStationAndWeather = function (req, res) {
 	var id = req.params.id;
 
@@ -63,6 +87,7 @@ exports.getStationAndWeather = function (req, res) {
 			result.station = station;
 			returnStation = true;
 			if (returnStation && returnWeather) {
+				result = addMessagesToStation(result);
 				res.send(result);
 			}
 			logger.info('Success getStationAndWeather-getStation! ');
@@ -76,6 +101,7 @@ exports.getStationAndWeather = function (req, res) {
 			result.weather = weather;
 			returnWeather = true;
 			if (returnStation && returnWeather) {
+				result = addMessagesToStation(result);
 				res.send(result);
 			}
 			logger.info('Success getStationAndWeather-getStation! ');
