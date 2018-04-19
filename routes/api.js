@@ -3,6 +3,7 @@
 var logger = require('../utils/logger.js');
 var database = require('../models/database.js');
 var slackBot = require('../utils/slackBot.js');
+const StatusService = require('../services/status-service');
 
 exports.addWeather = function (req, res) {
 	var weather = req.body;
@@ -50,6 +51,7 @@ exports.getAllStations = function (req, res) {
 
 var addMessagesToStation = function(result) {
 	result.station.messages = result.station.messages || [];
+	result.station.status = 'OFFLINE';
 
 	if (!result.weather.length) {
 		result.station.messages.push({
@@ -58,6 +60,7 @@ var addMessagesToStation = function(result) {
 		});
 	} else {
 		const lastWeather = result.weather[result.weather.length - 1];
+		result.station.status = new StatusService(lastWeather).getStatus();
 		const timeDifferenceMs = Date.now() - lastWeather.date.getTime();
 		const timeDifferenceMinutes = timeDifferenceMs / 1000.0 / 60;
 
