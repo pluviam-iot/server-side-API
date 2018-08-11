@@ -150,6 +150,7 @@ exports.getStationAndLastWeather = function (req, res) {
 			resultStation.country = station.location.country;
 			resultStation.county = station.location.county;
 			resultStation.city = station.location.city;
+			resultStation.inputs = station.inputs;
 			resultStation.url = 'http://pluvi.am/' + station.location.countryCode.toLowerCase() + '/' +
 								station.location.countyCode.toLowerCase() + '/' +
 								station.location.city.toLowerCase() + '/' +	station.urlName;
