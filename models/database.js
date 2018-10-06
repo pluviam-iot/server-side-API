@@ -239,7 +239,11 @@ exports.addBulkWeather = function (stationId, hashFromReq, body, callback) {
             var rawWeatherSingleProcessed = inputProcessor.doWork(rawWeatherSingleObj, station);
 
             // array[0] is alway date
-            rawWeatherSingleProcessed.date = new Date(+rawWeatherSingle[0]);
+            const isNumber = !rawWeatherSingle[0].replace(/\d/g, '').length;
+            if (isNumber) {
+              rawWeatherSingle[0] = +rawWeatherSingle[0];
+            }
+            rawWeatherSingleProcessed.date = new Date(rawWeatherSingle[0]);
             rawWeatherSingleProcessed.stationId = station._id;
             finalWeather.push(rawWeatherSingleProcessed);
           }
