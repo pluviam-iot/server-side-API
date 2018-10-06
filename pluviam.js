@@ -19,6 +19,10 @@ var config = require('config');
 
 var CronJob = require('cron').CronJob;
 
+/* Socket Server para receber dados das estações */
+var SocketServer = require('./services/socket-server');
+new SocketServer.SocketServer().start();
+
 var app = express();
 logger.debug(util.getMicrotime() + ' - Overriding Express logger');
 
