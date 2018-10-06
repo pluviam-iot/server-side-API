@@ -82,6 +82,7 @@ exports.getWeather = function (stationId, callback) {
         weather.humidity = item.humidity;
         weather.precipitation = item.precipitation;
         weather.pressure = item.pressure;
+        weather.battery = item.battery;
         weather.brightness = item.brightness;
         weather.windGust = item.windGust;
         weather.windSpeed = item.windSpeed;
